@@ -22,49 +22,48 @@
                 </ul>
             </div>
         @endif --}}
+        <div class="row">
+            <form id="register">
+                <div>
+                    <label class="form-label" for="name">Name:</label>
+                    <input class="form-control" type="text" id="name" name="name">
+                </div>
+                <div>
+                    <label class="form-label" for="email">Email:</label>
+                    <input class="form-control" type="email" id="email" name="email">
+                </div>
+                <div>
+                    <label class="form-label" for="password">Password:</label>
+                    <input class="form-control" type="password" id="password" name="password">
+                </div>
 
-        <form id="register">
-            @csrf
-            <div>
-                <label class="form-label" for="name">Name:</label>
-                <input class="form-control" type="text" id="name" name="name" required>
-            </div>
-            <div>
-                <label class="form-label" for="email">Email:</label>
-                <input class="form-control" type="email" id="email" name="email" required>
-            </div>
-            <div>
-                <label class="form-label" for="password">Password:</label>
-                <input class="form-control" type="password" id="password" name="password" required>
-            </div>
+                <div>
+                    <label class="form-label" for="address">Address:</label>
+                    <input class="form-control" type="text" id="address" name="address">
+                </div>
+                <div>
+                    <label class="form-label" for="city">City:</label>
+                    <input class="form-control" type="text" id="city" name="city">
+                </div>
+                <div>
+                    <label class="form-label" for="country">Country:</label>
+                    <input class="form-control" type="text" id="country" name="country">
+                </div>
+                <div>
+                    <label class="form-label" for="gender">Gender:</label>
+                    <select class="form-select mb-3" id="gender" name="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label" for="photo">Photo:</label>
+                    <input class="form-control" type="file" id="photo" name="profile_picture" accept="image/*">
+                </div>
+                <button class="btn btn-primary mt-3" type="submit">Register</button>
+            </form>
+        </div>
 
-            <div>
-                <label class="form-label" for="address">Address:</label>
-                <input class="form-control" type="text" id="address" name="address" required>
-            </div>
-            <div>
-                <label class="form-label" for="city">City:</label>
-                <input class="form-control" type="text" id="city" name="city" required>
-            </div>
-            <div>
-                <label class="form-label" for="country">Country:</label>
-                <input class="form-control" type="text" id="country" name="country" required>
-            </div>
-            <div>
-                <label class="form-label" for="gender">Gender:</label>
-                <select class="form-select mb-3" id="gender" name="gender" required>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
-            <div>
-                <label class="form-label" for="photo">Photo:</label>
-                <input class="form-control" type="file" id="photo" name="profile_picture" accept="image/*"
-                    required>
-            </div>
-            <button class="btn btn-primary mt-3" type="submit">Register</button>
-        </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
@@ -72,18 +71,17 @@
         $(document).ready(function() {
 
             $.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
             $("#register").submit(function(e) {
                 e.preventDefault();
                 var formData = new FormData(this);
                 $.ajax({
                     type: "post",
                     url: "{{ route('register') }}",
-                    data: "{ formData }",
-                    dataType: "dataType",
+                    data: formData,
                     processData: false,
                     contentType: false,
                     success: function(response) {

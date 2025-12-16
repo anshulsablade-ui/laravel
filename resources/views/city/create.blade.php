@@ -1,0 +1,74 @@
+@extends('app')
+@section('title', 'Add City')
+
+@section('style')
+
+@endsection
+
+@section('content')
+    <div class="row justify-content-between">
+        <h4 class="mb-4">Cities</h4>
+
+        <div class="card-body">
+            <form id="city">
+                <div>
+                    <label class="form-label" for="city">City Name</label>
+                    <input class="form-control" type="text" id="city" name="city_name">
+                    <span class="text-danger error-text city_name_err"></span>
+                </div>
+                <div>
+                    <label class="form-label" for="city">City Name</label>
+                    <select class="form-select mb-3" id="gender" name="gender">
+                        <option value="">-- select country --</option>
+                        @foreach ($countries as $row)
+                            <option value="{{ $row->country_id }}">{{ $row->country_name }}</option>
+                        @endforeach
+                    </select>
+                    <span class="text-danger error-text country_id_err"></span>
+                </div>
+                <button class="btn btn-primary mt-3" type="submit">Submit</button>
+            </form>
+        </div>
+    @endsection
+
+    @section('script')
+        <script>
+            $(document).ready(function() {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $('.error-text').text('');
+
+                $('#city').submit(function(e) {
+                    e.preventDefault();
+
+                    var formData = new FormData(this);
+
+                    $.ajax({
+                        type: "post",
+                        url: "{{ route('store.city') }}",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            if (response.status == "success") {
+                                alert(response.success);
+                                window.location.href = "{{ route('showcitieslist') }}";
+                            }
+                            console.log(response.errors);
+                            if (response.status === "errors") {
+                                let errors = response.errors;
+                                $.each(errors, function(key, value) {
+                                    console.log(key, value);
+                                    $('.' + key + '_err').text(value[0]);
+                                });
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+    @endsection

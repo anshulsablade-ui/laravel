@@ -6,28 +6,51 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\DataTables;
 
 class AuthController extends Controller
 {
+    public function index(Request $request)
+    {
+        // dd($request->all());
+        if ($request->ajax()) {
+
+            $data = User::select('id', 'photo', 'name', 'email', 'gender')->limit(10)->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+
+                    $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
+
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('auth.index');
+    }
+
+
     public function showLoginForm()
     {
         return view('auth.login');
     }
-    // public function LoginForm(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'email' => 'required|email',
-    //         'password' => 'required|min:6|confirmed',
-    //     ]);
 
-    //     if ($validator->fails()) {
-    //         redirect()->back()->withErrors($validator)->withInput();
-    //     }
-    //     else {
+    public function LoginForm(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|min:6|confirmed',
+        ]);
 
-    //     }
+        if ($validator->fails()) {
+            redirect()->back()->withErrors($validator)->withInput();
+        } else {
+        }
+    }
 
-    // }
 
     public function showRegisterForm()
     {
@@ -36,7 +59,7 @@ class AuthController extends Controller
 
     public function RegisterForm(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -76,8 +99,5 @@ class AuthController extends Controller
         }
     }
 
-    public function update(Request $request)
-    {
-
-    }
+    public function update(Request $request) {}
 }
