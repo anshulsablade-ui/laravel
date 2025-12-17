@@ -12,69 +12,120 @@
 
 <body>
 
-    <div class="container mt-4 pb-4 pt-4">
-        {{-- @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif --}}
+    <div class="container col-md-4">
         <div class="row">
-            <form id="register">
-                <div>
-                    <label class="form-label" for="name">Name:</label>
-                    <input class="form-control" type="text" id="name" name="name">
-                </div>
-                <div>
-                    <label class="form-label" for="email">Email:</label>
-                    <input class="form-control" type="email" id="email" name="email">
-                </div>
-                <div>
-                    <label class="form-label" for="password">Password:</label>
-                    <input class="form-control" type="password" id="password" name="password">
-                </div>
-
-                <div>
-                    <label class="form-label" for="address">Address:</label>
-                    <input class="form-control" type="text" id="address" name="address">
-                </div>
-                <div>
-                    <label class="form-label" for="city">City:</label>
-                    <input class="form-control" type="text" id="city" name="city">
-                </div>
-                <div>
-                    <label class="form-label" for="country">Country:</label>
-                    <input class="form-control" type="text" id="country" name="country">
-                </div>
-                <div>
-                    <label class="form-label" for="gender">Gender:</label>
-                    <select class="form-select mb-3" id="gender" name="gender">
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="form-label" for="photo">Photo:</label>
-                    <input class="form-control" type="file" id="photo" name="profile_picture" accept="image/*">
-                </div>
-                <button class="btn btn-primary mt-3" type="submit">Register</button>
-            </form>
+            <div class="col-md-12">
+                <h1 class="text-center">Register</h1>
+            </div>
         </div>
 
+        <form id="register" enctype="multipart/form-data">
+            @csrf
+
+            <div class="mb-2">
+                <label class="form-label">Name</label>
+                <input class="form-control" type="text" name="name">
+                <span class="text-danger error-text country_name_err"></span>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Email</label>
+                <input class="form-control" type="email" name="email">
+                <span class="text-danger error-text country_name_err"></span>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Password</label>
+                <input class="form-control" type="password" name="password">
+                <span class="text-danger error-text country_name_err"></span>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Address</label>
+                <input class="form-control" type="text" name="address">
+                <span class="text-danger error-text country_name_err"></span>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Country</label>
+                <select class="form-select" name="country" id="country">
+                    <option value="">Select</option>
+                    @foreach ($countries as $row)
+                        <option value="{{ $row->country_id }}">{{ $row->country_name }}</option>
+                    @endforeach
+                </select>
+                <span class="text-danger error-text country_name_err"></span>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">City</label>
+                <select class="form-select" name="city" id="city"></select>
+                <span class="text-danger error-text country_name_err"></span>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Gender</label>
+                <select class="form-select" name="gender">
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+                <span class="text-danger error-text country_name_err"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Profile Picture</label>
+                <input class="form-control" type="file" name="profile_picture" accept="image/*">
+                <span class="text-danger error-text country_name_err"></span>
+            </div>
+
+            <button class="btn btn-primary w-100" id="btnSubmit" type="submit">
+                Register
+            </button>
+        </form>
+
+        <div class="mb-2">
+            <span>Already have an account ?</span>
+            <a href="{{ route('login') }}" class=" w-100">Login</a>
+        </div>
+
+    </div>
+    </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script>
         $(document).ready(function() {
-
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
+            $('#country').on('change', function() {
+                var country_id = $(this).val();
+                if (country_id) {
+                    $.ajax({
+                        url: "{{ route('getCities') }}",
+                        type: "GET",
+                        data: {
+                            country_id: country_id
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            var data = '<option value="">Select City</option>';
+                            $.each(response, function(index, city) {
+                                data +=
+                                    `<option value="${city.city_id}">${city.city_name}</option>`;
+                            });
+                            $('#city').html(data);
+                        }
+                    });
+                } else {
+                    $('#city').html('<option value="">Select Country first</option>');
+                }
+            });
+
             $("#register").submit(function(e) {
                 e.preventDefault();
                 var formData = new FormData(this);
@@ -85,14 +136,18 @@
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        console.log(response);
-                        alert('Registration successful!');
-                        window.location.href = "{{ route('showLoginForm') }}";
+                        if (response.status == "success") {
+                            alert(response.success);
+                            window.location.href = "{{ route('showLoginForm') }}";
+                        }
+
+                        if (response.status === "errors") {
+                            let errors = response.errors;
+                            $.each(errors, function(key, value) {
+                                $('.' + key + '_err').text(value[0]);
+                            });
+                        }
                     }
-                    // error: function(xhr, status, error) {
-                    //     var err = JSON.parse(xhr.responseText);
-                    //     alert(err.message);
-                    // }
                 });
             });
         });

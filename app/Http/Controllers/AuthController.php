@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Countries;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -21,11 +23,16 @@ class AuthController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
 
-                    $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
+                    $btn = '<a href="' . route('edit.user', $row->id) . '" class="edit btn btn-primary btn-sm">Edit</a>
+                    <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-id="' . $row->id . '">Delete</a>';
 
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->addColumn('photo', function ($row) {
+
+                    return '<img src="' . asset($row->photo) . '" class="img-thumbnail" width="50px" height="50px">';
+                })
+                ->rawColumns(['action', 'photo'])
                 ->make(true);
         }
 
@@ -33,28 +40,10 @@ class AuthController extends Controller
     }
 
 
-    public function showLoginForm()
-    {
-        return view('auth.login');
-    }
-
-    public function LoginForm(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|min:6|confirmed',
-        ]);
-
-        if ($validator->fails()) {
-            redirect()->back()->withErrors($validator)->withInput();
-        } else {
-        }
-    }
-
-
     public function showRegisterForm()
     {
-        return view('auth.register');
+        $countries = Countries::select('country_id', 'country_name')->get();
+        return view('auth.register', compact('countries'));
     }
 
     public function RegisterForm(Request $request)
@@ -65,14 +54,15 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
             'address' => 'required|string',
+            'country_id' => 'required|int',
+            'city_id' => 'required|int',
             'gender' => 'required|in:male,female,other',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
 
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(), 'status' => 'error']);
-            // redirect()->back()->withErrors($validator)->withInput();
+            return response()->json(['errors' => $validator->errors(), 'status' => 'errors']);
         } else {
 
             $insert = User::create([
@@ -80,18 +70,17 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
                 'address' => $request->address,
-                'city_id' => $request->city,
                 'country_id' => $request->country,
+                'city_id' => $request->city,
                 'gender' => $request->gender
             ]);
 
             // image upload handling
             if ($request->hasFile('profile_picture')) {
-                $image = $request->file('profile_picture');
-                $imageName = time() . '_.' . $image->getClientOriginalExtension();
-                $image->move(public_path('uploads/profile_pictures'), $imageName);
-                $insert->photo = 'uploads/profile_pictures/' . $imageName;
-                $insert->save();
+                $file = $request->file('profile_picture');
+                $filename = time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images'), $filename);
+                $insert->photo = $filename;
             }
 
             return response()->json(['success' => 'Registration successful. Please login.', 'status' => 'success']);
@@ -100,4 +89,40 @@ class AuthController extends Controller
     }
 
     public function update(Request $request) {}
+
+
+
+    // login form ----------------------------------------
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    public function LoginForm(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|exists:users,email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            response()->json(['success' => 'Login successful.', 'status' => 'success']);
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('showLoginForm');
+    }
 }

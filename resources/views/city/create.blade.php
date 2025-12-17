@@ -18,7 +18,7 @@
                 </div>
                 <div>
                     <label class="form-label" for="city">City Name</label>
-                    <select class="form-select mb-3" id="gender" name="gender">
+                    <select class="form-select mb-3" id="gender" name="country_id">
                         <option value="">-- select country --</option>
                         @foreach ($countries as $row)
                             <option value="{{ $row->country_id }}">{{ $row->country_name }}</option>
@@ -56,7 +56,7 @@
                         success: function(response) {
                             if (response.status == "success") {
                                 alert(response.success);
-                                window.location.href = "{{ route('showcitieslist') }}";
+                                window.location.href = "{{ route('showCitieslist') }}";
                             }
                             console.log(response.errors);
                             if (response.status === "errors") {

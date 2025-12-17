@@ -65,8 +65,10 @@
             $('body').on('click', '.delete', function() {
 
                 var country_id = $(this).attr("data-id");
-                console.log(country_id);
                 confirm("Are You sure want to delete?");
+                if (!confirm) {
+                    return false;
+                }
 
                 $.ajax({
                     type: "delete",

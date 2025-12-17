@@ -39,7 +39,7 @@
             var table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('showcitieslist') }}",
+                ajax: "{{ route('showCitieslist') }}",
                 columns: [{
                         data: 'city_id',
                         name: 'city_id'
@@ -70,16 +70,18 @@
             $('body').on('click', '.delete', function() {
 
                 var city_id = $(this).attr("data-id");
-                console.log(country_id);
                 confirm("Are You sure want to delete?");
+                if (!confirm) {
+                    return false;
+                }
 
                 $.ajax({
                     type: "delete",
                     url: '/cities/delete/' + city_id,
-                    data: country_id,
+                    data: city_id,
                     success: function(response) {
                         alert(response.success);
-                        window.location.href = "{{ route('showcitieslist') }}";
+                        window.location.href = "{{ route('showCitieslist') }}";
                     }
                 });
             });

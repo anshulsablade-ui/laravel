@@ -14,7 +14,13 @@ class CityController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $cities = Cities::select('city_id', 'city_name', 'city_id')->limit(10)->get();
+            $cities = Cities::select('city_id', 'city_name', 'country_id')
+                ->with(['country' => function ($query) {
+                    $query->select('country_id', 'country_name');
+                }])
+                ->limit(10)->get();
+
+            // dd($cities->toArray());
             return DataTables::of($cities)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -23,7 +29,11 @@ class CityController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->addColumn('country_name', function ($row) {
+
+                    return $row->country->country_name;
+                })
+                ->rawColumns(['action', 'country_name'])
                 ->make(true);
         }
         return view('city.index');
@@ -38,7 +48,7 @@ class CityController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'city_name' => 'required|string|unique:cities,city_name',
+            'city_name' => 'required|string',
             'country_id' => 'required|int'
         ]);
         if ($validator->fails()) {
@@ -53,16 +63,44 @@ class CityController extends Controller
 
     public function edit($id)
     {
-        //
+        $cities = Cities::select('city_id', 'city_name', 'country_id')->where('city_id', $id)->first();
+        $countries = Countries::select('country_id', 'country_name')->get();
+        return view('city.update', compact('cities', 'countries'));
     }
 
     public function update(Request $request)
     {
-        //
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'city_name' => 'required|string',
+            'country_id' => 'required|int'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(), 'status' => 'errors']);
+        }
+        $insert = Cities::where('city_id', $request->city_id)->update([
+            'city_name' => $request->city_name,
+            'country_id' => $request->country_id
+        ]);
+        return response()->json(['success' => 'City name update successful.', 'status' => 'success']);
     }
 
     public function delete($id)
     {
-        //
+        // dd($request->all());
+        $cities = Cities::where('city_id', $id)->first();
+        if ($cities) {
+            Cities::where('city_id', $id)->delete();
+            return response()->json(['success' => 'City name delete successful.', 'status' => 'success']);
+        }
+        if ($cities = null) {
+            return response()->json(['errors' => 'City not found.', 'status' => 'errors']);
+        }
+    }
+
+    public function getCities(Request $request)
+    {
+        $cities = Cities::select('city_id', 'city_name')->where('country_id', $request->country_id)->with('country')->get();
+        return response()->json($cities);
     }
 }

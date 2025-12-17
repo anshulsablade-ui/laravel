@@ -49,10 +49,11 @@
 
                 <!-- Sidebar -->
                 <div class="col-md-2 sidebar p-0">
-                    <a href="{{ route('showUsers') }}" class="active">Usres</a>
-                    <a href="{{ route('showCountrieslist') }}">Countries</a>
-                    <a href="{{ route('showcitieslist') }}">Cities</a>
-                    <a href="{{ route('showRegisterForm') }}">Register</a>
+                    <a href="{{ route('showUsers') }}" class="@if (request()->routeIs('showUsers')) active @endif">Users</a>
+                    <a href="{{ route('showCountrieslist') }}" class="@if (request()->routeIs('showCountrieslist')) active @endif">Countries</a>
+                    <a href="{{ route('showCitieslist') }}" class="@if (request()->routeIs('showCitieslist')) active @endif">City</a>
+                    <a href="{{ route('showRegisterForm') }}" class="@if (request()->routeIs('showRegisterForm')) active @endif">Register</a>
+                    <a href="{{ route('showLoginForm') }}" class="@if (request()->routeIs('showLoginForm')) active @endif">Login</a>
                 </div>
 
                 <!-- Main Content -->
@@ -64,7 +65,6 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
 
     @yield('script')
 </body>

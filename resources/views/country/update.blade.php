@@ -13,13 +13,15 @@
             <form id="country">
                 @csrf
                 @method('put')
+
                 <input type="hidden" name="country_id" value="{{ $countries->country_id }}">
+
                 <div>
                     <label class="form-label" for="country">Country Name</label>
                     <input class="form-control" type="text" id="country" name="country_name" value="{{ $countries->country_name }}">
                     <span class="text-danger error-text country_name_err"></span>
                 </div>
-                <button class="btn btn-primary mt-3" type="submit">Submit</button>
+                <button class="btn btn-primary mt-3" type="submit">Up[date]</button>
             </form>
         </div>
     @endsection
@@ -32,8 +34,6 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-
-                $('.error-text').text('');
 
                 $('#country').submit(function(e) {
                     e.preventDefault();
