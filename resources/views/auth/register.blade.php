@@ -25,42 +25,42 @@
             <div class="mb-2">
                 <label class="form-label">Name</label>
                 <input class="form-control" type="text" name="name">
-                <span class="text-danger error-text country_name_err"></span>
+                <span class="text-danger error-text name_err"></span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">Email</label>
                 <input class="form-control" type="email" name="email">
-                <span class="text-danger error-text country_name_err"></span>
+                <span class="text-danger error-text email_err"></span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">Password</label>
                 <input class="form-control" type="password" name="password">
-                <span class="text-danger error-text country_name_err"></span>
+                <span class="text-danger error-text password_err"></span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">Address</label>
                 <input class="form-control" type="text" name="address">
-                <span class="text-danger error-text country_name_err"></span>
+                <span class="text-danger error-text address_err"></span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">Country</label>
-                <select class="form-select" name="country" id="country">
+                <select class="form-select" name="country_id" id="country">
                     <option value="">Select</option>
                     @foreach ($countries as $row)
                         <option value="{{ $row->country_id }}">{{ $row->country_name }}</option>
                     @endforeach
                 </select>
-                <span class="text-danger error-text country_name_err"></span>
+                <span class="text-danger error-text country_id_err"></span>
             </div>
 
             <div class="mb-2">
                 <label class="form-label">City</label>
-                <select class="form-select" name="city" id="city"></select>
-                <span class="text-danger error-text country_name_err"></span>
+                <select class="form-select" name="city_id" id="city"></select>
+                <span class="text-danger error-text city_id_err"></span>
             </div>
 
             <div class="mb-2">
@@ -70,13 +70,13 @@
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                 </select>
-                <span class="text-danger error-text country_name_err"></span>
+                <span class="text-danger error-text gender_err"></span>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Profile Picture</label>
                 <input class="form-control" type="file" name="profile_picture" accept="image/*">
-                <span class="text-danger error-text country_name_err"></span>
+                <span class="text-danger error-text photo_err"></span>
             </div>
 
             <button class="btn btn-primary w-100" id="btnSubmit" type="submit">
@@ -89,8 +89,6 @@
             <a href="{{ route('login') }}" class=" w-100">Login</a>
         </div>
 
-    </div>
-    </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
@@ -112,7 +110,7 @@
                             country_id: country_id
                         },
                         success: function(response) {
-                            console.log(response);
+
                             var data = '<option value="">Select City</option>';
                             $.each(response, function(index, city) {
                                 data +=

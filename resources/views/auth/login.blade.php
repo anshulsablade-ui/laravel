@@ -30,6 +30,8 @@
             <div class="mb-2">
                 <label>Password:</label>
                 <input type="password" class="form-control" name="password">
+
+                <span class="text-danger error-text password_err"></span>
             </div>
 
             <button type="submit" id="btnLogin" class="btn btn-primary w-100">
@@ -68,19 +70,21 @@
                     processData: false,
                     contentType: false,
                     success: function(response) {
+                        console.log(response);
                         if (response.status == "success") {
                             alert(response.success);
                             window.location.href = "{{ route('showUsers') }}";
                         }
-
-                        if (response.status === "errors") {
-                            let errors = response.errors;
-                            $.each(errors, function(key, value) {
-                                console.log(key, value);
-                                $('.' + key + '_err').text(value[0]);
-                            });
+                        if (response.status === "error") {
+                            $('.email_err').text(response.error);
                         }
                     },
+                    error: function(response) {
+                        let errors = response.responseJSON.errors;
+                        $.each(errors, function(key, value) {
+                            $('.' + key + '_err').text(value[0]);
+                        });
+                    }
                 });
             });
         });

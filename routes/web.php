@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\MultipleInsert\BulkController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -23,7 +24,10 @@ Route::get('/getCities', [CityController::class, 'getCities'])->name('getCities'
 // route group middleware
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/users', [AuthController::class, 'index'])->name('showUsers');
+    Route::get('/users', [ProfileController::class, 'index'])->name('showUsers');
+    Route::get('/users/edit/{id}', [ProfileController::class, 'edit'])->name('edit.user');
+    Route::put('/users/update', [ProfileController::class, 'update'])->name('update.user');
+    Route::delete('/users/delete/{id}', [ProfileController::class, 'delete'])->name('delete.user');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 

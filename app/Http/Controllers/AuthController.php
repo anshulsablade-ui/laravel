@@ -8,38 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
-use Yajra\DataTables\DataTables;
 
 class AuthController extends Controller
 {
-    public function index(Request $request)
-    {
-        // dd($request->all());
-        if ($request->ajax()) {
-
-            $data = User::select('id', 'photo', 'name', 'email', 'gender')->limit(10)->get();
-
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-
-                    $btn = '<a href="' . route('edit.user', $row->id) . '" class="edit btn btn-primary btn-sm">Edit</a>
-                    <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-id="' . $row->id . '">Delete</a>';
-
-                    return $btn;
-                })
-                ->addColumn('photo', function ($row) {
-
-                    return '<img src="' . asset($row->photo) . '" class="img-thumbnail" width="50px" height="50px">';
-                })
-                ->rawColumns(['action', 'photo'])
-                ->make(true);
-        }
-
-        return view('auth.index');
-    }
-
-
     public function showRegisterForm()
     {
         $countries = Countries::select('country_id', 'country_name')->get();
@@ -56,9 +27,8 @@ class AuthController extends Controller
             'address' => 'required|string',
             'country_id' => 'required|int',
             'city_id' => 'required|int',
-            'gender' => 'required|in:male,female,other',
+            'gender' => 'required|in:male,female',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-
         ]);
 
         if ($validator->fails()) {
@@ -70,12 +40,12 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
                 'address' => $request->address,
-                'country_id' => $request->country,
-                'city_id' => $request->city,
+                'country_id' => $request->country_id,
+                'city_id' => $request->city_id,
                 'gender' => $request->gender
             ]);
 
-            // image upload handling
+            // image upload
             if ($request->hasFile('profile_picture')) {
                 $file = $request->file('profile_picture');
                 $filename = time() . '.' . $file->getClientOriginalExtension();
@@ -84,7 +54,6 @@ class AuthController extends Controller
             }
 
             return response()->json(['success' => 'Registration successful. Please login.', 'status' => 'success']);
-            // return Redirect::route('login')->with(['success' => 'Registration successful. Please login.', 'status' => 'success']);
         }
     }
 
@@ -108,12 +77,10 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            response()->json(['success' => 'Login successful.', 'status' => 'success']);
+            return response()->json(['success' => 'Login successful.', 'status' => 'success']);
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+        return response()->json(['error' => 'The provided credentials do not match our records.', 'status' => 'error']);
     }
 
     public function logout(Request $request)
