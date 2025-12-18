@@ -11,7 +11,7 @@ use Yajra\DataTables\DataTables;
 
 class ProfileController extends Controller
 {
-        public function index(Request $request)
+    public function index(Request $request)
     {
         // dd($request->all());
         if ($request->ajax()) {
@@ -22,14 +22,16 @@ class ProfileController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
 
-                    $btn = '<a href="' . route('edit.user', $row->id) . '" class="edit btn btn-primary btn-sm">Edit</a>
+                    $btn = '<a href="' . route('show.user', $row->id) . '" class="show btn btn-info btn-sm">View</a> <a href="' . route('edit.user', $row->id) . '" class="edit btn btn-primary btn-sm">Edit</a>
                     <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-id="' . $row->id . '">Delete</a>';
 
                     return $btn;
                 })
                 ->addColumn('photo', function ($row) {
-
-                    return '<img src="' . asset($row->photo) . '" class="img-thumbnail" width="50px" height="50px">';
+                    if (!$row->photo) {
+                        return '<img src="' . asset('images/default.jpg') . '" class="img-thumbnail" width="50px" height="50px">';
+                    }
+                    return '<img src="' . asset('images/' . $row->photo) . '" class="img-thumbnail" width="50px" height="50px">';
                 })
                 ->rawColumns(['action', 'photo'])
                 ->make(true);
@@ -50,7 +52,7 @@ class ProfileController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|exists:users,email',
             'address' => 'required|string',
             'country_id' => 'required|int',
             'city_id' => 'required|int',
@@ -69,23 +71,21 @@ class ProfileController extends Controller
             'gender' => $request->gender
         ]);
 
-            $user = User::find($request->id);
+        $user = User::find($request->id);
 
 
-    if ($request->hasFile('profile_picture')) {
+        if ($request->hasFile('profile_picture')) {
 
-        // delete old image
-        if ($user->profile_picture && file_exists(public_path('uploads/' . $user->profile_picture))) {
-            unlink(public_path('uploads/' . $user->profile_picture));
+            // delete old image
+            if (isset($user->photo) && file_exists(public_path('images/' . $user->photo))) {
+                unlink(public_path('images/' . $user->photo));
+            }
+
+            $file = $request->file('profile_picture');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images'), $filename);
+            User::where('id', $request->id)->update(['photo' => $filename]);
         }
-
-        $image = $request->file('profile_picture');
-        $imageName = time() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('uploads'), $imageName);
-
-        $user->profile_picture = $imageName;
-    }
-
 
         return response()->json(['success' => 'User update successful.', 'status' => 'success']);
     }
@@ -93,7 +93,18 @@ class ProfileController extends Controller
     public function delete($id)
     {
         $user = User::find($id);
+        if ($user->photo && file_exists(public_path('images/' . $user->photo))) {
+            unlink(public_path('images/' . $user->photo));
+        }
+
         $user->delete();
+
         return response()->json(['success' => 'User delete successful.', 'status' => 'success']);
+    }
+
+    public function show($id)
+    {
+        $user = User::with('country', 'city')->find($id);
+        return view('profile.show', compact('user'));
     }
 }

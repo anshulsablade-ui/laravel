@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('password');
             $table->string('address');
-            $table->string('city');
-            $table->string('country');
-            $table->string('gender');
+            $table->foreignId('country_id')->constrained();
+            $table->foreignId('city_id')->constrained();
+            $table->enum('gender', ['male', 'female']);
             $table->string('photo');
             $table->timestamps();
         });

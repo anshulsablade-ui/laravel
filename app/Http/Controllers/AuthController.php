@@ -53,6 +53,8 @@ class AuthController extends Controller
                 $insert->photo = $filename;
             }
 
+            $insert->save();
+
             return response()->json(['success' => 'Registration successful. Please login.', 'status' => 'success']);
         }
     }

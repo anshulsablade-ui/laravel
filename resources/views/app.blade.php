@@ -52,7 +52,6 @@
                     <a href="{{ route('showUsers') }}" class="@if (request()->routeIs('showUsers')) active @endif">Users</a>
                     <a href="{{ route('showCountrieslist') }}" class="@if (request()->routeIs('showCountrieslist')) active @endif">Countries</a>
                     <a href="{{ route('showCitieslist') }}" class="@if (request()->routeIs('showCitieslist')) active @endif">City</a>
-                    <a href="{{ route('showRegisterForm') }}" class="@if (request()->routeIs('showRegisterForm')) active @endif">Register</a>
                     <a href="{{ route('logout') }}" class="@if (request()->routeIs('logout')) active @endif">Logout</a>
                 </div>
 

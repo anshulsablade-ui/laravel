@@ -14,10 +14,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('showLoginForm');
 Route::post('/login', [AuthController::class, 'LoginForm'])->name('login');
 
-
-
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('showRegisterForm');
 Route::post('/register', [AuthController::class, 'RegisterForm'])->name('register');
+
 Route::get('/getCities', [CityController::class, 'getCities'])->name('getCities');
 
 
@@ -28,6 +27,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/edit/{id}', [ProfileController::class, 'edit'])->name('edit.user');
     Route::put('/users/update', [ProfileController::class, 'update'])->name('update.user');
     Route::delete('/users/delete/{id}', [ProfileController::class, 'delete'])->name('delete.user');
+    Route::get('/users/show/{id}', [ProfileController::class, 'show'])->name('show.user');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 

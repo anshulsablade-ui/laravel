@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('title', 'Profile')
+@section('title', 'Profile Eidt')
 
 @section('style')
 
@@ -68,7 +68,7 @@
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Profile Picture</label>
-                    <input class="form-control" type="file" name="profile_picture" accept="image/*">
+                    <input class="form-control" type="file" name="profile_picture" value="{{ $user->photo }}" accept="image/*">
                     <span class="text-danger error-text photo_err"></span>
                 </div>
                 <button class="btn btn-primary mt-3 col-md-12" type="submit">Update</button>

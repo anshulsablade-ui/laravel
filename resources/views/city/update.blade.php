@@ -22,7 +22,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Country</label>
+                        <label class="form-label">Country name</label>
                         <select class="form-select" name="country_id">
                             <option value="">-- Select Country --</option>
                             @foreach ($countries as $row)

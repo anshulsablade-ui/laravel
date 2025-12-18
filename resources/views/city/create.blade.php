@@ -17,7 +17,7 @@
                     <span class="text-danger error-text city_name_err"></span>
                 </div>
                 <div>
-                    <label class="form-label" for="city">City Name</label>
+                    <label class="form-label" for="city">Country Name</label>
                     <select class="form-select mb-3" id="gender" name="country_id">
                         <option value="">-- select country --</option>
                         @foreach ($countries as $row)
