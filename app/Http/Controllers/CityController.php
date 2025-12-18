@@ -25,15 +25,12 @@ class CityController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
 
-                    $btn = '<a href="' . route('edit.city', $row->city_id) . '" class="edit btn btn-primary btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-id="' . $row->city_id . '">Delete</a>';
+                    $btn = '<a href="' . route('edit.city', $row->city_id) . '" class="edit btn btn-primary btn-sm">Edit</a> 
+                    <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-id="' . $row->city_id . '">Delete</a>';
 
                     return $btn;
                 })
-                ->addColumn('country_name', function ($row) {
-
-                    return $row->country->country_name;
-                })
-                ->rawColumns(['action', 'country_name'])
+                ->rawColumns(['action'])
                 ->make(true);
         }
         return view('city.index');

@@ -24,11 +24,11 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'address' => 'required|string',
-            'country_id' => 'required|int',
-            'city_id' => 'required|int',
-            'gender' => 'required|in:male,female',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'address' => 'required|string',
+            // 'country_id' => 'required|int',
+            // 'city_id' => 'required|int',
+            // 'gender' => 'required|in:male,female',
+            // 'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -39,21 +39,21 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
-                'address' => $request->address,
-                'country_id' => $request->country_id,
-                'city_id' => $request->city_id,
-                'gender' => $request->gender
+                // 'address' => $request->address,
+                // 'country_id' => $request->country_id,
+                // 'city_id' => $request->city_id,
+                // 'gender' => $request->gender
             ]);
 
-            // image upload
-            if ($request->hasFile('profile_picture')) {
-                $file = $request->file('profile_picture');
-                $filename = time() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('images'), $filename);
-                $insert->photo = $filename;
-            }
+            // // image upload
+            // if ($request->hasFile('profile_picture')) {
+            //     $file = $request->file('profile_picture');
+            //     $filename = time() . '.' . $file->getClientOriginalExtension();
+            //     $file->move(public_path('images'), $filename);
+            //     $insert->photo = $filename;
+            // }
 
-            $insert->save();
+            // $insert->save();
 
             return response()->json(['success' => 'Registration successful. Please login.', 'status' => 'success']);
         }

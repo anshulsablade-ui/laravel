@@ -29,7 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/users/delete/{id}', [ProfileController::class, 'delete'])->name('delete.user');
     Route::get('/users/show/{id}', [ProfileController::class, 'show'])->name('show.user');
 
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/countries/list', [CountryController::class, 'index'])->name('showCountrieslist');
     Route::get('/countries', [CountryController::class, 'showCountryForm'])->name('showCountryForm');

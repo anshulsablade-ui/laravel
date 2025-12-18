@@ -49,8 +49,8 @@
                         name: 'city_name'
                     },
                     {
-                        data: 'country_name',
-                        name: 'country_name'
+                        data: 'country.country_name',
+                        name: 'country.country_name'
                     },
                     {
                         data: 'action',
