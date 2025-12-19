@@ -26,42 +26,7 @@
 
 <body class="login-page bg-body-secondary">
 
-    {{-- <div class="container col-md-4 ">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="text-center">Login</h1>
-            </div>
-        </div>
-
-        <form id="loginForm">
-            @csrf
-
-            <div class="mb-2">
-                <label>Email:</label>
-                <input type="email" class="form-control" name="email">
-                <span class="text-danger error-text email_err"></span>
-            </div>
-
-            <div class="mb-2">
-                <label>Password:</label>
-                <input type="password" class="form-control" name="password">
-
-                <span class="text-danger error-text password_err"></span>
-            </div>
-
-            <button type="submit" id="btnLogin" class="btn btn-primary w-100">
-                Login
-            </button>
-
-        </form>
-        <div class="mb-2">
-            <span>Don't have an account ?</span>
-            <a href="{{ route('register') }}" class=" w-100">
-                Register
-            </a>
-        </div>
-    </div> --}}
-        <div class="login-box">
+    <div class="login-box">
       <div class="card card-outline card-primary">
         <div class="card-header text-center">
             <h1 class="mb-0">Login</h1>
@@ -108,10 +73,10 @@
             <!--end::Row-->
           </form>
           <!-- /.social-auth-links -->
-          <p class="mb-1"><a href="forgot-password.html" class="">I forgot my password</a></p>
+          {{-- <p class="mb-1"><a href="forgot-password.html" class="">I forgot my password</a></p> --}}
           <p class="mb-0">
             Don't have an account ?
-            <a href="{{ route('register') }}" class="text-center">Register</a>
+            <a href="{{ route('showRegisterForm') }}" class="text-center">Register</a>
           </p>
         </div>
         <!-- /.login-card-body -->
@@ -126,9 +91,11 @@
 
             $.ajaxSetup({
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    Authorization: "Bearer " + localStorage.getItem("jwt_token")
                 }
             });
+
 
             $("#loginForm").submit(function(e) {
                 e.preventDefault();
@@ -144,7 +111,6 @@
                     success: function(response) {
                         console.log(response);
                         if (response.status == "success") {
-                            alert(response.success);
                             window.location.href = "{{ route('showUsers') }}";
                         }
                         if (response.status === "error") {

@@ -75,7 +75,6 @@
                     url: '/countries/delete/' + country_id,
                     data: country_id,
                     success: function(response) {
-                        alert(response.success);
                         window.location.href = "{{ route('showCountrieslist') }}";
                     }
                 });

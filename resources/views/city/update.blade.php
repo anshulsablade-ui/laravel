@@ -68,7 +68,6 @@
 
                     success: function(response) {
                         if (response.status === 'success') {
-                            alert(response.success);
                             window.location.href = "{{ route('showCitieslist') }}";
                         }
 

@@ -80,7 +80,6 @@
                     url: '/cities/delete/' + city_id,
                     data: city_id,
                     success: function(response) {
-                        alert(response.success);
                         window.location.href = "{{ route('showCitieslist') }}";
                     }
                 });

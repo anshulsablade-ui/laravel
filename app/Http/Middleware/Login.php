@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class Login
 {
@@ -16,8 +17,9 @@ class Login
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check()) {
-            return redirect()->route('showLoginForm');
+        // dd(Auth::check());
+        if (session()->has('token') == null) {
+            return redirect()->route('login');
         }
         return $next($request);
     }

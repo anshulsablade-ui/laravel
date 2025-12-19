@@ -12,12 +12,12 @@ class CountryController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $countries = Countries::select('country_id', 'country_name')->limit(10)->get();
+            $countries = Countries::select('country_id', 'country_name')->get();
             return DataTables::of($countries)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
 
-                $btn = '<a href="' . route('edit.country', $row->country_id) . '" class="edit btn btn-primary btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-id="' . $row->country_id . '">Delete</a>';
+                    $btn = '<a href="' . route('edit.country', $row->country_id) . '" class="edit btn btn-primary btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-id="' . $row->country_id . '">Delete</a>';
 
                     return $btn;
                 })
@@ -42,7 +42,8 @@ class CountryController extends Controller
         $insert = Countries::create([
             'country_name' => $request->country_name
         ]);
-        return response()->json(['success' => 'Country name add successful.', 'status' => 'success']);
+        session()->flash('message', 'Country name add successful.');
+        return response()->json(['message' => 'Country name add successful.', 'status' => 'success']);
     }
 
     public function edit($id)
@@ -62,7 +63,7 @@ class CountryController extends Controller
         $insert = Countries::where('country_id', $request->country_id)->update([
             'country_name' => $request->country_name
         ]);
-        return response()->json(['success' => 'Country name update successful.', 'status' => 'success']);
+        return response()->json(['message' => 'Country name update successful.', 'status' => 'success']);
     }
 
     public function delete($id)

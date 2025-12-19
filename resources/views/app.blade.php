@@ -8,29 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'index')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    {{-- <style>
-        body {
-            background-color: #f5f6fa;
-        }
 
-        .sidebar {
-            min-height: 100vh;
-            background: aliceblue;
-        }
-
-        .sidebar a {
-            color: #adb5bd;
-            text-decoration: none;
-            padding: 10px 15px;
-            display: block;
-        }
-
-        .sidebar a:hover,
-        .sidebar a.active {
-            background: #b1b6bb;
-            color: #fff;
-        }
-    </style> --}}
     <link rel="stylesheet" href="{{ asset('css/adminlte.css') }}">
     <link
       rel="stylesheet"
@@ -50,31 +28,6 @@
 
 <body class="layout-fixed sidebar-expand-lg sidebar-open bg-body-tertiary">
 
-    {{-- <div class="container-fluid">
-        <div class="row align-items-start">
-            <nav class="navbar bg-body-tertiary">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="#">Users</a>
-                </div>
-            </nav>
-        </div>
-        <div class="row">
-
-            <!-- Sidebar -->
-            <div class="col-md-2 sidebar p-0">
-                <a href="{{ route('showUsers') }}" class="@if (request()->routeIs('showUsers')) active @endif">Users</a>
-                <a href="{{ route('showCountrieslist') }}" class="@if (request()->routeIs('showCountrieslist')) active @endif">Countries</a>
-                <a href="{{ route('showCitieslist') }}" class="@if (request()->routeIs('showCitieslist')) active @endif">City</a>
-                <a href="{{ route('logout') }}" class="@if (request()->routeIs('logout')) active @endif">Logout</a>
-            </div>
-
-            <!-- Main Content -->
-            <div class="col-md-10 p-4">
-                @yield('content')
-            </div>
-        </div>
-    </div> --}}
-
     <div class="app-wrapper">
       <!--begin::Header-->
       <nav class="app-header navbar navbar-expand bg-body">
@@ -83,39 +36,22 @@
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                @if (Auth::user()->photo) 
-                    <img
-                    src="{{ asset('images/' . Auth::user()->photo) }}"
-                    class="rounded-circle shadow"
-                    alt="User Image"
-                  />
-                @else
-                <img src="{{ asset('images/default.jpg') }}"
-                    class="rounded-circle shadow"
-                    alt="User Image"/>
-                @endif
-                <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
+      
+                  <img src="{{ asset('images/' . (auth()->user()->photo ? auth()->user()->photo : 'default.jpg')) }}""
+                       class="user-image rounded-circle shadow"
+                       alt="User Image"/>
+
+                <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
               </a>
               <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <!--begin::User Image-->
                 <li class="user-header text-bg-primary">
-                    @if (Auth::user()->photo) 
-                        <img
-                        src="{{ asset('images/' . Auth::user()->photo) }}"
-                        class="rounded-circle shadow"
-                        alt="User Image"
-                      />
-                    @else
-                    <img src="{{ asset('images/default.jpg') }}"
-                        class="rounded-circle shadow"
-                        alt="User Image"/>
-                    @endif
-                  {{-- <img
-                    src="./assets/img/user2-160x160.jpg"
-                    class="rounded-circle shadow"
-                    alt="User Image"
-                  /> --}}
-                  <p>{{ Auth::user()->name }}</p>
+
+                    <img src="{{ asset('images/' . (auth()->user()->photo ? auth()->user()->photo : 'default.jpg')) }}""
+                         class="user-image rounded-circle shadow"
+                         alt="User Image"/>
+
+                  <p>{{ auth()->user()->name }}</p>
                 </li>
                 <!--end::User Image-->
                 <!--begin::Menu Footer-->
@@ -138,7 +74,7 @@
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
             <img
-              src="./assets/img/AdminLTELogo.png"
+              src="{{ asset('/assets/img/AdminLTELogo.png') }}"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
             />
@@ -223,24 +159,37 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/adminlte.js') }}"></script>
 
     @yield('script')
+    
     <script>
-        $(document).ready(function () {
-            $('#logout').on('click', function () {
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('logout') }}",
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (response) {
-                        window.location.href = "{{ route('login') }}";
-                    }
-                });
-            });
+      $('#logout').click(function () {
+        $.post("/logout", { _token: "{{ csrf_token() }}" }, function () {
+          window.location.href = "/login";
         });
+      });
+
+      $(document).ready(function () {
+        @if (session('message'))
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+              }
+            });
+            Toast.fire({
+              icon: "success",
+              title: "{{ session('message') }}"
+            });
+        @endif
+      });
     </script>
 </body>
 

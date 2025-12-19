@@ -5,7 +5,15 @@
 @endsection
 
 @section('content')
-    <h4 class="mb-4">Users</h4>
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <h4 class="mb-4">Users</h4>
+        </div>
+        <div class="col-2 text-end p-0">
+            <a href="{{ route('create.user') }}" class="btn btn-primary">Add User</a>
+        </div>
+    </div>
+
     <div class="card-body">
         <table class="table data-table">
             <thead>
@@ -48,26 +56,40 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            // addsweetalert delete
             $('body').on('click', '.delete', function() {
 
                 var user_id = $(this).attr("data-id");
-                confirm("Are You sure want to delete?");
-                if (!confirm) {
-                    return false;
-                }
 
-                $.ajax({
-                    type: "delete",
-                    url: '/users/delete/' + user_id,
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "delete",
+                            url: '/users/delete/' + user_id,
 
-                    success: function(response) {
-                        alert(response.success);
-                        window.location.href = "{{ route('showUsers') }}";
+                            success: function(response) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    response.success,
+                                    'success'
+                                )
+                                table.ajax.reload();
+                            }
+                        });
                     }
-                });
+                })
             });
-
+            
         });
+
+
     </script>
 @endsection

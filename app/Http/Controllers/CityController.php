@@ -18,7 +18,7 @@ class CityController extends Controller
                 ->with(['country' => function ($query) {
                     $query->select('country_id', 'country_name');
                 }])
-                ->limit(10)->get();
+                ->get();
 
             // dd($cities->toArray());
             return DataTables::of($cities)
@@ -55,7 +55,7 @@ class CityController extends Controller
             'city_name' => $request->city_name,
             'country_id' => $request->country_id
         ]);
-        return response()->json(['success' => 'Country name add successful.', 'status' => 'success']);
+        return response()->json(['message' => 'Country name add successful.', 'status' => 'success']);
     }
 
     public function edit($id)
@@ -79,7 +79,7 @@ class CityController extends Controller
             'city_name' => $request->city_name,
             'country_id' => $request->country_id
         ]);
-        return response()->json(['success' => 'City name update successful.', 'status' => 'success']);
+        return response()->json(['message' => 'City name update successful.', 'status' => 'success']);
     }
 
     public function delete($id)
@@ -88,7 +88,7 @@ class CityController extends Controller
         $cities = Cities::where('city_id', $id)->first();
         if ($cities) {
             Cities::where('city_id', $id)->delete();
-            return response()->json(['success' => 'City name delete successful.', 'status' => 'success']);
+            return response()->json(['message' => 'City name delete successful.', 'status' => 'success']);
         }
         if ($cities = null) {
             return response()->json(['errors' => 'City not found.', 'status' => 'errors']);
