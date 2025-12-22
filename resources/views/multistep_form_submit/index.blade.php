@@ -13,31 +13,31 @@
             <form id="user" class="row justify-content-center g-3">
                 @csrf
 
-                <div class="col-md-8 mb-2 tab">
+                <div class="col-md-12 mb-2 tab">
                     <label class="form-label">Name</label>
                     <input class="form-control" type="text" name="name">
                     <span class="text-danger error-text name_err"></span>
                 </div>
 
-                <div class="col-md-8 mb-2 tab">
+                <div class="col-md-12 mb-2 tab d-none">
                     <label class="form-label">Email</label>
                     <input class="form-control" type="email" name="email">
                     <span class="text-danger error-text email_err"></span>
                 </div>
 
-                <div class="col-md-8 mb-2 tab">
+                <div class="col-md-12 mb-2 tab d-none">
                     <label class="form-label">Password</label>
                     <input class="form-control" type="password" name="password">
                     <span class="text-danger error-text password_err"></span>
                 </div>
 
-                <div class="col-md-8 mb-2 tab">
+                <div class="col-md-12 mb-2 tab d-none">
                     <label class="form-label">Address</label>
                     <input class="form-control" type="text" name="address">
                     <span class="text-danger error-text address_err"></span>
                 </div>
 
-                <div class="col-md-8 mb-2 tab">
+                <div class="col-md-12 mb-2 tab d-none">
                     <div class="row g-3">
                         <div class="col-md-12 mb-2">
                             <label class="form-label">Country</label>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-8 mb-2 tab">
+                <div class="col-md-12 mb-2 tab d-none">
                     <label class="form-label">Gender</label>
                     <select class="form-select" name="gender">
                         <option value="">Select</option>
@@ -70,13 +70,14 @@
                     <span class="text-danger error-text gender_err"></span>
                 </div>
 
-                <div class="col-md-8 mb-3 tab">
+                <div class="col-md-12 mb-3 tab d-none">
                     <label class="form-label">Profile Picture</label>
                     <input class="form-control" type="file" name="profile_picture" accept="image/*">
                     <span class="text-danger error-text photo_err"></span>
                 </div>
-                <div class="col-md-12 mb-2">
-                    <button class="btn btn-primary mt-3 col-md-12" type="submit">Submit</button>
+                <div class="col-md-12 text-end mb-2">
+                    <button class="btn btn-primary mt-3 d-none" type="button" id="prevBtn">Previous</button>
+                    <button class="btn btn-primary mt-3" type="button" id="nextBtn">Next</button>
                 </div>
             </form>
         </div>
@@ -85,6 +86,35 @@
 
 @section('script')
     <script>
+        $(document).on('click', '#nextBtn', function () {
+            var tabs = $('.tab');
+            var currentTab = tabs.filter(':not(.d-none)');
+            var nextTab = currentTab.next('.tab');
+
+            if (nextTab.length) {
+                currentTab.addClass('d-none');
+                nextTab.removeClass('d-none');
+                $('#prevBtn').removeClass('d-none');
+                if (nextTab.is(tabs.last())) {
+                    $('#nextBtn').attr('type', 'submit').text('Submit');
+                }
+            }
+        });
+        $(document).on('click', '#prevBtn', function () {
+            var tabs = $('.tab');
+            var currentTab = tabs.filter(':not(.d-none)');
+            var prevTab = currentTab.prev('.tab');
+
+            if (prevTab.length) {
+                currentTab.addClass('d-none');
+                prevTab.removeClass('d-none');
+                if (prevTab.is(tabs.first())) {
+                    $('#prevBtn').addClass('d-none');
+                }
+                $('#nextBtn').attr('type', 'button').text('Next');
+            }
+        });
+
 
     </script>
 

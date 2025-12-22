@@ -52,6 +52,14 @@ Route::middleware(['auth:sanctum', 'login'])->group(function () {
     Route::get('/cities/edit/{id}', [CityController::class, 'edit'])->name('edit.city');
     Route::put('/cities/update', [CityController::class, 'update'])->name('update.city');
     Route::delete('/cities/delete/{id}', [CityController::class, 'delete'])->name('delete.city');
+
+
+
+    Route::get('/multistep/form', function () {
+            $countries = \App\Models\Countries::select('country_id', 'country_name')->get();
+            return view('multistep_form_submit.index', compact('countries'));
+        }
+    )->name('multistep.form');
 });
 
 
@@ -61,10 +69,3 @@ Route::middleware(['auth:sanctum', 'login'])->group(function () {
 Route::get('/', [BulkController::class, 'index']);
 Route::post('/bulk.store', [BulkController::class, 'store'])->name('bulk.store');
 
-
-// Multi step form with submit ---------------------------------------------------------------------
-Route::get('/multistep/form', function () {
-    $countries = \App\Models\Countries::select('country_id', 'country_name')->get();
-    return view('multistep_form_submit.index', compact('countries'));
-}
-)->name('multistep.form');
