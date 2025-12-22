@@ -63,6 +63,7 @@ class CountryController extends Controller
         $insert = Countries::where('country_id', $request->country_id)->update([
             'country_name' => $request->country_name
         ]);
+        session()->flash('message', 'Country name update successful.');
         return response()->json(['message' => 'Country name update successful.', 'status' => 'success']);
     }
 

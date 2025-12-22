@@ -51,10 +51,11 @@ class CityController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors(), 'status' => 'errors']);
         }
-        $insert = Cities::create([
+        Cities::create([
             'city_name' => $request->city_name,
             'country_id' => $request->country_id
         ]);
+        session()->flash('message', 'City name add successful.');
         return response()->json(['message' => 'Country name add successful.', 'status' => 'success']);
     }
 
@@ -75,10 +76,11 @@ class CityController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors(), 'status' => 'errors']);
         }
-        $insert = Cities::where('city_id', $request->city_id)->update([
+        Cities::where('city_id', $request->city_id)->update([
             'city_name' => $request->city_name,
             'country_id' => $request->country_id
         ]);
+        session()->flash('message', 'City name update successful.');
         return response()->json(['message' => 'City name update successful.', 'status' => 'success']);
     }
 

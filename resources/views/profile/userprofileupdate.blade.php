@@ -122,7 +122,7 @@
 
                     success: function(response) {
                         if (response.status === 'success') {
-                            window.location.href = "{{ route('showUsers') }}";
+                            window.location.href = "{{ route('show.user', auth()->user()->id) }}";
                         }
                     },
                     error:function(err){

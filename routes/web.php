@@ -31,6 +31,8 @@ Route::middleware(['auth:sanctum', 'login'])->group(function () {
     Route::delete('/users/delete/{id}', [ProfileController::class, 'delete'])->name('delete.user');
     Route::get('/users/show/{id}', [ProfileController::class, 'show'])->name('show.user');
 
+    Route::get('/loginuserprofile/edit/{id}', [ProfileController::class, 'loginuserprofileEdit'])->name('loginuserprofileEdit');
+
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/countries/list', [CountryController::class, 'index'])->name('showCountrieslist');
@@ -55,3 +57,9 @@ Route::middleware(['auth:sanctum', 'login'])->group(function () {
 // Multiple insert form data ---------------------------------------------------------------------
 Route::get('/', [BulkController::class, 'index']);
 Route::post('/bulk.store', [BulkController::class, 'store'])->name('bulk.store');
+
+Route::get('/multistep/form', function () {
+    $countries = \App\Models\Countries::select('country_id', 'country_name')->get();
+    return view('multistep_form_submit.index', compact('countries'));
+}
+)->name('multistep.form');

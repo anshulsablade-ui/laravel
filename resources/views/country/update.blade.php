@@ -21,7 +21,7 @@
                     <input class="form-control" type="text" id="country" name="country_name" value="{{ $countries->country_name }}">
                     <span class="text-danger error-text country_name_err"></span>
                 </div>
-                <button class="btn btn-primary mt-3" type="submit">Up[date]</button>
+                <button class="btn btn-primary mt-3" type="submit">Update</button>
             </form>
         </div>
     @endsection

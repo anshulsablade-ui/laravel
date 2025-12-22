@@ -33,6 +33,13 @@
       <nav class="app-header navbar navbar-expand bg-body">
         <!--begin::Container-->
         <div class="container-fluid">
+                    <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                <i class="bi bi-list"></i>
+              </a>
+            </li>
+          </ul>
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
@@ -56,6 +63,7 @@
                 <!--end::User Image-->
                 <!--begin::Menu Footer-->
                 <li class="user-footer">
+                  <a href="{{ route('show.user', auth()->user()->id) }}" class="btn btn-default btn-flat">Profile</a>
                   <a href="javascript:void(0)" class="btn btn-default btn-flat float-end" id="logout">Sign out</a>
                 </li>
                 <!--end::Menu Footer-->
@@ -71,7 +79,7 @@
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
-          <a href="./index.html" class="brand-link">
+          <a href="{{ route('showUsers') }}" class="brand-link">
             <!--begin::Brand Image-->
             <img
               src="{{ asset('/assets/img/AdminLTELogo.png') }}"
@@ -124,7 +132,7 @@
       <!--begin::App Main-->
       <main class="app-main">
         <!--begin::App Content Header-->
-        <div class="app-content-header">
+        {{-- <div class="app-content-header">
           <!--begin::Container-->
           <div class="container-fluid">
             <!--begin::Row-->
@@ -140,10 +148,10 @@
             <!--end::Row-->
           </div>
           <!--end::Container-->
-        </div>
+        </div> --}}
         <!--end::App Content Header-->
         <!--begin::App Content-->
-        <div class="app-content">
+        <div class="app-content pt-3">
           <!--begin::Container-->
           <div class="container-fluid">
             <div class="row">

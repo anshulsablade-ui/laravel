@@ -36,20 +36,10 @@ class AuthController extends Controller
                 'password' => bcrypt($request->password)
             ]);
 
-            // $token = JWTAuth::fromUser($user);
-            $token = $user->createToken('auth_token')->plainTextToken;
+            $token = JWTAuth::fromUser($user);
             session()->put('token', $token);
 
-            // // image upload
-            // if ($request->hasFile('profile_picture')) {
-            //     $file = $request->file('profile_picture');
-            //     $filename = time() . '.' . $file->getClientOriginalExtension();
-            //     $file->move(public_path('images'), $filename);
-            //     $insert->photo = $filename;
-            // }
-
-            // $insert->save();
-
+            session()->flash('message', 'Registration successful.');
             return response()->json(['token' => $token, 'message' => 'Registration successful. ', 'status' => 'success']);
         }
     }
@@ -64,7 +54,6 @@ class AuthController extends Controller
 
     public function LoginForm(Request $request)
     {
-        // dd(auth()->user());
         $credentials = $request->validate([
             'email' => 'required|exists:users,email',
             'password' => 'required',
@@ -76,15 +65,15 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = JWTAuth::fromUser($user);
         session()->put('token', $token);
 
+        session()->flash('message', 'Login successful.');
         return response()->json(['token' => $token, 'message' => 'Login successful.', 'status' => 'success']);
     }
 
     public function logout(Request $request)
     {
-        auth()->user()->tokens()->delete();
         session()->forget('token');
 
         return response()->json([

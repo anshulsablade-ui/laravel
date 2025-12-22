@@ -81,6 +81,8 @@ class ProfileController extends Controller
 
             $insert->save();
 
+            session()->flash('message', 'User created successfully.');
+
             return response()->json(['message' => 'User created successfully.', 'status' => 'success']);
         }
     }
@@ -128,10 +130,12 @@ class ProfileController extends Controller
 
             $file = $request->file('profile_picture');
             $filename = time() . '.' . $file->getClientOriginalExtension();
+            
             $file->move(public_path('images'), $filename);
-            User::where('id', $request->id)->update(['photo' => $filename]);
+            $user->update(['photo' => $filename]);
         }
 
+        session()->flash('message', 'User update successful.');
         return response()->json(['message' => 'User update successful.', 'status' => 'success']);
     }
 
@@ -151,5 +155,12 @@ class ProfileController extends Controller
     {
         $user = User::with('country', 'city')->find($id);
         return view('profile.show', compact('user'));
+    }
+    public function loginuserprofileEdit()
+    {
+        $user = auth()->user();
+        $countries = Countries::select('country_id', 'country_name')->get();
+        $cities = Cities::select('city_id', 'city_name')->where('country_id', $user->country_id)->get();
+        return view('profile.userprofileupdate', compact('user', 'countries', 'cities'));
     }
 }

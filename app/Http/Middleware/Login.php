@@ -10,14 +10,9 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class Login
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
-        // dd(Auth::check());
+        // dd(session('token'));
         if (session()->has('token') == null) {
             return redirect()->route('login');
         }

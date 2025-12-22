@@ -54,7 +54,7 @@
                     </div>
 
                     <div class="text-center mt-4">
-                        <a href="{{ route('edit.user', $user->id) }}" class="btn btn-primary px-4">
+                        <a href="{{ route('loginuserprofileEdit', $user->id) }}" class="btn btn-primary px-4">
                             Edit Profile
                         </a>
                     </div>
