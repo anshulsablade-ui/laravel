@@ -37,24 +37,26 @@
                     <span class="text-danger error-text address_err"></span>
                 </div>
 
-                <div class="tab">
-                    <div class="col-md-8 mb-2">
-                        <label class="form-label">Country</label>
-                        <select class="form-select" name="country_id" id="country">
-                            <option value="">Select</option>
-                            @foreach ($countries as $row)
-                                <option value="{{ $row->country_id }}">{{ $row->country_name }}</option>
-                            @endforeach
-                        </select>
-                        <span class="text-danger error-text country_id_err"></span>
-                    </div>
+                <div class="col-md-8 mb-2 tab">
+                    <div class="row g-3">
+                        <div class="col-md-12 mb-2">
+                            <label class="form-label">Country</label>
+                            <select class="form-select" name="country_id" id="country">
+                                <option value="">Select</option>
+                                @foreach ($countries as $row)
+                                    <option value="{{ $row->country_id }}">{{ $row->country_name }}</option>
+                                @endforeach
+                            </select>
+                            <span class="text-danger error-text country_id_err"></span>
+                        </div>
 
-                    <div class="col-md-8 mb-2">
-                        <label class="form-label">City</label>
-                        <select class="form-select" name="city_id" id="city">
-                            <option value="">Select</option>
-                        </select>
-                        <span class="text-danger error-text city_id_err"></span>
+                        <div class="col-md-12 mb-2">
+                            <label class="form-label">City</label>
+                            <select class="form-select" name="city_id" id="city">
+                                <option value="">Select</option>
+                            </select>
+                            <span class="text-danger error-text city_id_err"></span>
+                        </div>
                     </div>
                 </div>
 

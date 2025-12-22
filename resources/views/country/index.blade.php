@@ -12,6 +12,7 @@
         </div>
         <div class="col-6 text-end p-0">
             <a href="{{ route('showCountryForm') }}" class="btn btn-primary">Add Country</a>
+            <a href="{{ route('showBulkCountryForm') }}" class="btn btn-primary">Bulk Add Country</a>
         </div>
     </div>
 

@@ -48,11 +48,10 @@
                             if (response.status == "success") {
                                 window.location.href = "{{ route('showCountrieslist') }}";
                             }
-                            console.log(response.errors);
+                            
                             if (response.status === "errors") {
                                 let errors = response.errors;
                                 $.each(errors, function(key, value) {
-                                    console.log(key, value);
                                     $('.' + key + '_err').text(value[0]);
                                 });
                             }

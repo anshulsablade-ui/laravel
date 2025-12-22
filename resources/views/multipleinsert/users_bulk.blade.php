@@ -74,7 +74,7 @@ $(document).ready(function () {
         }
     });
 
-    // Submit via AJAX
+    // Submit AJAX
     $('#bulkForm').submit(function (e) {
         e.preventDefault();
 
