@@ -5,6 +5,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\MultipleInsert\BulkController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserImportController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -53,6 +54,8 @@ Route::middleware(['auth:sanctum', 'login'])->group(function () {
     Route::put('/cities/update', [CityController::class, 'update'])->name('update.city');
     Route::delete('/cities/delete/{id}', [CityController::class, 'delete'])->name('delete.city');
 
+    Route::get('/csv-upload', [UserImportController::class, 'index'])->name('csv.upload');
+    Route::post('/csv-import', [UserImportController::class, 'import'])->name('csv.import');
 
 
     Route::get('/multistep/form', function () {

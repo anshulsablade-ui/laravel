@@ -33,7 +33,7 @@
       <nav class="app-header navbar navbar-expand bg-body">
         
         <div class="container-fluid">
-                    <ul class="navbar-nav">
+          <ul class="navbar-nav">
             <li class="nav-item">
               <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
                 <i class="bi bi-list"></i>
@@ -122,6 +122,12 @@
               <li class="nav-item">
                 <a href="{{ route('multistep.form') }}" class="nav-link @if (request()->routeIs('multistep.form')) active @endif">
                    <p>Multi Step Form</p>
+                </a>
+              </li>
+              
+              <li class="nav-item">
+                <a href="{{ route('csv.upload') }}" class="nav-link @if (request()->routeIs('csv.upload')) active @endif">
+                   <p>CSV Upload</p>
                 </a>
               </li>
             </ul>

@@ -32,25 +32,33 @@
                             <p class="text-muted mb-0">{{ $user->email }}</p>
                         </div>
 
-                        <div class="col-md-6">
-                            <strong>Address</strong>
-                            <p class="text-muted mb-0">{{ $user->address }}</p>
-                        </div>
+                        @if( $user->address )
+                            <div class="col-md-6">
+                                <strong>Address</strong>
+                                <p class="text-muted mb-0">{{ $user->address }}</p>
+                            </div>
+                        @endif
 
-                        <div class="col-md-6">
-                            <strong>Country</strong>
-                            <p class="text-muted mb-0">{{ $user->country->country_name }}</p>
-                        </div>
+                        @if ( $user->country )
+                            <div class="col-md-6">
+                                <strong>Country</strong>
+                                <p class="text-muted mb-0">{{ $user->country->country_name }}</p>
+                            </div>
+                        @endif
 
-                        <div class="col-md-6">
-                            <strong>City</strong>
-                            <p class="text-muted mb-0">{{ $user->city->city_name }}</p>
-                        </div>
+                        @if( $user->state )
+                            <div class="col-md-6">
+                                <strong>City</strong>
+                                <p class="text-muted mb-0">{{ $user->city->city_name }}</p>
+                            </div>
+                        @endif
 
-                        <div class="col-md-6">
-                            <strong>Gender</strong>
-                            <p class="text-muted mb-0 text-capitalize">{{ $user->gender }}</p>
-                        </div>
+                        @if( $user->gender )
+                            <div class="col-md-6">
+                                <strong>Gender</strong>
+                                <p class="text-muted mb-0 text-capitalize">{{ $user->gender }}</p>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="mt-4">
