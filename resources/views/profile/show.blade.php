@@ -7,9 +7,9 @@
 @endsection
 
 @section('content')
-    <div class="row justify-content-between">
-        <h4 class="mb-4 col-md-12">Profile view</h4>
-        <div class="card-body col-md-12">
+    <div class="justify-content-between">
+        <h4 class="mb-4">Profile view</h4>
+        <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-4">
                     @if ($user->photo == null)
@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                    <div class="text-center mt-4">
+                    <div class="mt-4">
                         <a href="{{ route('loginuserprofileEdit', $user->id) }}" class="btn btn-primary px-4">
                             Edit Profile
                         </a>

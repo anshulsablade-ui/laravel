@@ -6,11 +6,11 @@
 @endsection
 
 @section('content')
-    <div class="row justify-content-between">
-        <div class="col-6">
-            <h4 class="mb-4">Countries</h4>
+    <div class="d-flex justify-content-between px-3">
+        <div>
+            <h4>Countries</h4>
         </div>
-        <div class="col-6 text-end p-0">
+        <div>
             <a href="{{ route('showCountryForm') }}" class="btn btn-primary">Add Country</a>
             <a href="{{ route('showBulkCountryForm') }}" class="btn btn-primary">Bulk Add Country</a>
         </div>

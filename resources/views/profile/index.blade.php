@@ -6,30 +6,30 @@
 @endsection
 
 @section('content')
-    <div class="row justify-content-between">
-        <div class="col-6">
-            <h4 class="mb-4">Users</h4>
+    <div class="d-flex justify-content-between px-3">
+        <div>
+            <h4>Users</h4>
         </div>
-        <div class="col-6 text-end p-0">
+        <div>
             <a href="{{ route('create.user') }}" class="btn btn-primary">Add User</a>
         </div>
     </div>
 
-<div class="card-body table-responsive">
-    <table class="table table-striped data-table w-100">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Photo</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Gender</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
+    <div class="card-body table-responsive">
+        <table class="table table-striped data-table w-100">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Photo</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
 @endsection
 

@@ -6,7 +6,7 @@
 @endsection
 
 @section('content')
-    <div class="row justify-content-between">
+    <div class="justify-content-between">
         <h4 class="mb-4">Update Country</h4>
 
         <div class="card-body">

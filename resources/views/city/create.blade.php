@@ -6,7 +6,7 @@
 @endsection
 
 @section('content')
-    <div class="row justify-content-between">
+    <div class="justify-content-between">
         <h4 class="mb-4">Cities</h4>
 
         <div class="card-body">
@@ -26,7 +26,7 @@
                     </select>
                     <span class="text-danger error-text country_id_err"></span>
                 </div>
-                <button class="btn btn-primary mt-3" type="submit">Submit</button>
+                <button class="btn btn-primary" type="submit">Submit</button>
             </form>
         </div>
     @endsection

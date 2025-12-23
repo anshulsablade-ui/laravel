@@ -44,7 +44,7 @@
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
       
-                  <img src="{{ asset('images/' . (auth()->user()->photo ? auth()->user()->photo : 'default.jpg')) }}""
+                  <img src="{{ asset('images/' . (auth()->user()->photo ? auth()->user()->photo : 'default.jpg')) }}"
                        class="user-image rounded-circle shadow"
                        alt="User Image"/>
 
@@ -54,7 +54,7 @@
                 
                 <li class="user-header text-bg-primary">
 
-                    <img src="{{ asset('images/' . (auth()->user()->photo ? auth()->user()->photo : 'default.jpg')) }}""
+                    <img src="{{ asset('images/' . (auth()->user()->photo ? auth()->user()->photo : 'default.jpg')) }}"
                          class="user-image rounded-circle shadow"
                          alt="User Image"/>
 
@@ -118,6 +118,12 @@
                 <a href="{{ route('showCitieslist') }}" class="nav-link @if (request()->routeIs('showCitieslist')) active @endif">
                    <p>City</p>
                 </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('multistep.form') }}" class="nav-link @if (request()->routeIs('multistep.form')) active @endif">
+                   <p>Multi Step Form</p>
+                </a>
+              </li>
             </ul>
             
           </nav>
@@ -130,9 +136,7 @@
         <div class="app-content pt-3">
           
           <div class="container-fluid">
-            <div class="row">
                 @yield('content')
-            </div>
           </div>
           
         </div>

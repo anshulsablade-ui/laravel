@@ -6,11 +6,11 @@
 @endsection
 
 @section('content')
-    <div class="row justify-content-between">
-        <div class="col-6">
-            <h4 class="mb-4">City</h4>
+    <div class="d-flex justify-content-between px-3">
+        <div>
+            <h4>City</h4>
         </div>
-        <div class="col-6 text-end p-0">
+        <div>
             <a href="{{ route('showCityForm') }}" class="btn btn-primary">Add City</a>
         </div>
     </div>

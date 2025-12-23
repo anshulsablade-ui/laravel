@@ -7,34 +7,34 @@
 @endsection
 
 @section('content')
-    <div class="row justify-content-between">
-        <h4 class="mb-4 col-md-12">Profile update</h4>
-        <div class="card-body col-md-12">
+    <div class="justify-content-between">
+        <h4 class="mb-4">Profile update</h4>
+        <div class="card-body">
             <form id="profile" class="row g-3">
                 @csrf
                 @method('put')
 
                 <input type="hidden" name="id" value="{{ $user->id }}">
 
-                <div class="col-md-6 mb-2">
+                <div class="col-md-6">
                     <label class="form-label">Name</label>
                     <input class="form-control" type="text" name="name" value="{{ $user->name }}">
                     <span class="text-danger error-text name_err"></span>
                 </div>
 
-                <div class="col-md-6 mb-2">
+                <div class="col-md-6">
                     <label class="form-label">Email</label>
                     <input class="form-control" type="email" name="email" value="{{ $user->email }}">
                     <span class="text-danger error-text email_err"></span>
                 </div>
 
-                <div class="col-md-12 mb-2">
+                <div class="col-md-12">
                     <label class="form-label">Address</label>
                     <input class="form-control" type="text" name="address" value="{{ $user->address }}">
                     <span class="text-danger error-text address_err"></span>
                 </div>
 
-                <div class="col-md-6 mb-2">
+                <div class="col-md-6">
                     <label class="form-label">Country</label>
                     <select class="form-select" name="country_id" id="country">
                         <option value="">Select</option>
@@ -45,7 +45,7 @@
                     <span class="text-danger error-text country_id_err"></span>
                 </div>
 
-                <div class="col-md-6 mb-2">
+                <div class="col-md-6">
                     <label class="form-label">City</label>
                     <select class="form-select" name="city_id" id="city">
                         <option value="">Select</option>
@@ -56,7 +56,7 @@
                     <span class="text-danger error-text city_id_err"></span>
                 </div>
 
-                <div class="col-md-6 mb-2">
+                <div class="col-md-6">
                     <label class="form-label">Gender</label>
                     <select class="form-select" name="gender">
                         <option value="">Select</option>
@@ -66,13 +66,13 @@
                     <span class="text-danger error-text gender_err"></span>
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6">
                     <label class="form-label">Profile Picture</label>
                     <input class="form-control" type="file" name="profile_picture" value="{{ $user->photo }}" accept="image/*">
                     <span class="text-danger error-text photo_err"></span>
                 </div>
-                <div class="col-md-12 mb-2">
-                    <button class="btn btn-primary mt-3 col-md-12" type="submit">Update</button>
+                <div class="col-md-12">
+                    <button class="btn btn-primary" type="submit">Update</button>
                 </div>
             </form>
         </div>
@@ -124,11 +124,12 @@
                         if (response.status === 'success') {
                             window.location.href = "{{ route('show.user', auth()->user()->id) }}";
                         }
-                    },
-                    error:function(err){
-                        $.each(err.responseJSON.errors, function(key, val){
-                            $('span.' + key + '_err').text(val[0]);
-                        });
+                        if (response.status === 'errors') {
+                            let errors = response.errors;
+                            $.each(errors, function(key, value) {
+                                $('.' + key + '_err').text(value[0]);
+                            });
+                        }
                     }
                 });
             });
