@@ -755,7 +755,7 @@
             if (this.config.reducedMotion) {
                 this.respectReducedMotion();
             }
-            this.initErrorAnnouncements();
+            // this.initErrorAnnouncements();
             this.initTableAccessibility();
             this.initFormAccessibility();
         }
@@ -932,29 +932,29 @@
             }
         }
         // WCAG 3.3.1: Error Identification
-        initErrorAnnouncements() {
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    mutation.addedNodes.forEach((node) => {
-                        if (node.nodeType === Node.ELEMENT_NODE) {
-                            const element = node;
-                            // Check for error messages
-                            if (element.matches('.alert-danger, .invalid-feedback, .error')) {
-                                this.announce(element.textContent || 'Error occurred', 'assertive');
-                            }
-                            // Check for success messages
-                            if (element.matches('.alert-success, .success')) {
-                                this.announce(element.textContent || 'Success', 'polite');
-                            }
-                        }
-                    });
-                });
-            });
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-        }
+        // initErrorAnnouncements() {
+        //     const observer = new MutationObserver((mutations) => {
+        //         mutations.forEach((mutation) => {
+        //             mutation.addedNodes.forEach((node) => {
+        //                 if (node.nodeType === Node.ELEMENT_NODE) {
+        //                     const element = node;
+        //                     // Check for error messages
+        //                     if (element.matches('.alert-danger, .invalid-feedback, .error')) {
+        //                         this.announce(element.textContent || 'Error occurred', 'assertive');
+        //                     }
+        //                     // Check for success messages
+        //                     if (element.matches('.alert-success, .success')) {
+        //                         this.announce(element.textContent || 'Success', 'polite');
+        //                     }
+        //                 }
+        //             });
+        //         });
+        //     });
+        //     observer.observe(document.body, {
+        //         childList: true,
+        //         subtree: true
+        //     });
+        // }
         // WCAG 1.3.1: Info and Relationships
         initTableAccessibility() {
             document.querySelectorAll('table').forEach((table) => {

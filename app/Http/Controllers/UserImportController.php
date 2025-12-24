@@ -29,9 +29,11 @@ class UserImportController extends Controller
 
         $file = fopen($request->file('csv_file'), 'r');
         fgetcsv($file);
-        // dd((fgetcsv($file)) !== false);
 
         while (($row = fgetcsv($file)) !== false) {
+            if (User::where('email', $row[1])->exists()) {
+                continue;
+            }
             User::create([
                 'name' => $row[0],
                 'email' => $row[1],

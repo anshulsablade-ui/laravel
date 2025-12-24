@@ -31,27 +31,19 @@
             $('#country').submit(function (e) {
                 e.preventDefault();
 
-                var formData = new FormData(this);
+                ajaxCall('{{ route('csv.import') }}', 'POST', new FormData(this), function (response) {
+                    if (response.status === "success") {
+                        window.location.href = "{{ route('showUsers') }}";
+                    }
 
-                $.ajax({
-                    type: "post",
-                    url: "{{ route('csv.import') }}",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        if (response.status == "success") {
-                            window.location.href = "{{ route('showUsers') }}";
-                        }
-
-                        if (response.status === "errors") {
-                            let errors = response.errors;
-                            $.each(errors, function (key, value) {
-                                $('.' + key + '_err').text(value[0]);
-                            });
-                        }
+                    if (response.status === "errors") {
+                        let errors = response.errors;
+                        $.each(errors, function (key, value) {
+                            $('.' + key + '_err').text(value[0]);
+                        });
                     }
                 });
+
             });
         });
     </script>

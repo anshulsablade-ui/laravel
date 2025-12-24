@@ -11,7 +11,6 @@
         <h4 class="mb-4">Add User</h4>
         <div class="card-body">
             <form id="user" class="row g-3">
-                @csrf
 
                 <div class="col-md-6">
                     <label class="form-label">Name</label>
@@ -84,6 +83,20 @@
         $(document).ready(function() {
 
             $('#country').on('change', function() {
+
+                // ajaxCall('{{ route('getCities') }}', 'POST', {
+                //     country_id: $(this).val()
+                // }, function(response) {
+                //     var data = '<option value="">Select City</option>';
+                //     $.each(response, function(index, city) {
+                //         data +=
+                //             `<option value="${city.city_id}">${city.city_name}</option>`;
+                //     });
+                //     $('#city').html(data);
+                // }, function() {
+                //     console.log('An error occurred while fetching cities');
+                // });
+                
                 var country_id = $(this).val();
                 if (country_id) {
                     $.ajax({
@@ -107,30 +120,23 @@
                 }
             });
 
+            // ajaxCall function usage
             $('#user').submit(function (e) {
                 e.preventDefault();
 
-                let formData = new FormData(this);
                 $('.error-text').text('');
-
-                $.ajax({
-                    url: "{{ route('store.user') }}",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            window.location.href = "{{ route('showUsers') }}";
-                        }
-                        if (response.status === 'errors') {
-                            let errors = response.errors;
-                            $.each(errors, function(key, value) {
-                                $('.' + key + '_err').text(value[0]);
-                            });
-                        }
+                ajaxCall('{{ route('store.user') }}', 'POST', new FormData(this), function(response) {
+                    if (response.status === 'success') {
+                        window.location.href = "{{ route('showUsers') }}";
                     }
+                    if (response.status === 'errors') {
+                        let errors = response.errors;
+                        $.each(errors, function(key, value) {
+                            $('.' + key + '_err').text(value[0]);
+                        });
+                    }
+                }, function() {
+                    console.log('An error occurred');
                 });
             });
 

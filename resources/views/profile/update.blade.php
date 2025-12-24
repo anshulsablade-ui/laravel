@@ -110,27 +110,19 @@
             $('#profile').submit(function (e) {
                 e.preventDefault();
 
-                let formData = new FormData(this);
                 $('.error-text').text('');
-
-                $.ajax({
-                    url: "{{ route('update.user') }}",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            window.location.href = "{{ route('showUsers') }}";
-                        }
-                        if (response.status === 'errors') {
-                            let errors = response.errors;
-                            $.each(errors, function(key, value) {
-                                $('.' + key + '_err').text(value[0]);
-                            });
-                        }
+                ajaxCall('{{ route('update.user') }}', 'POST', new FormData(this), function(response) {
+                    if (response.status === 'success') {
+                        window.location.href = "{{ route('showUsers') }}";
                     }
+                    if (response.status === 'errors') {
+                        let errors = response.errors;
+                        $.each(errors, function(key, value) {
+                            $('.' + key + '_err').text(value[0]);
+                        });
+                    }
+                }, function() {
+                    console.log('An error occurred');
                 });
             });
 
