@@ -69,6 +69,6 @@ Route::middleware(['auth:sanctum', 'login'])->group(function () {
 
 
 // Multiple insert form data ---------------------------------------------------------------------
-Route::get('/', [BulkController::class, 'index']);
+Route::get('/multipleinsert', [BulkController::class, 'index'])->name('multipleinsert');
 Route::post('/bulk.store', [BulkController::class, 'store'])->name('bulk.store');
 

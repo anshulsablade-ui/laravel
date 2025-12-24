@@ -17,37 +17,34 @@ class UserImportController extends Controller
     public function import(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'csv_file' => 'required|mimes:csv,txt',
-        ], [
+            'csv_file' => 'required|mimes:csv',
+        ], 
+        [
             'csv_file.required' => 'Please upload a CSV file.',
-            'csv_file.mimes' => 'The file must be a CSV or TXT format.',
+            'csv_file.mimes' => 'The file must be a CSV format.',
         ]);
         if ($validator->fails()) {
-            return response()->json([ 'status' => 'errors', 'errors' => $validator->errors() ]);
+            return response()->json(['status' => 'errors', 'errors' => $validator->errors()]);
         }
 
         $file = fopen($request->file('csv_file'), 'r');
-
         fgetcsv($file);
-        // dd(fgetcsv($file));
+        // dd((fgetcsv($file)) !== false);
 
         while (($row = fgetcsv($file)) !== false) {
-            str_split($row);
-
-            dd(explode(';', $row[1]));
             User::create([
-                'name'     => $row[0],
-                'email'    => $row[1],
+                'name' => $row[0],
+                'email' => $row[1],
                 'password' => Hash::make($row[2]),
-                'address'  => $row[4],
-                'gender'   => $row[6]
-            ]); 
+                'address' => $row[3],
+                'gender' => $row[4]
+            ]);
         }
 
         fclose($file);
-        
+
         session()->flash('success', 'CSV Data Imported Successfully!');
-        return response()->json([ 'status' => 'success', 'message' => 'CSV Data Imported Successfully!' ]);
+        return response()->json(['status' => 'success', 'message' => 'CSV Data Imported Successfully!']);
     }
 }
 

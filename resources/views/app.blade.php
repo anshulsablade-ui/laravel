@@ -120,6 +120,11 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ route('multipleinsert') }}" class="nav-link @if (request()->routeIs('multipleinsert')) active @endif">
+                   <p>Multiple Insert</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ route('multistep.form') }}" class="nav-link @if (request()->routeIs('multistep.form')) active @endif">
                    <p>Multi Step Form</p>
                 </a>
