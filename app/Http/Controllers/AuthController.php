@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
     public function showRegisterForm()
     {
-        $countries = Countries::select('country_id', 'country_name')->get();
-        return view('auth.register', compact('countries'));
+        return view('auth.register');
     }
 
     public function RegisterForm(Request $request)
@@ -23,43 +23,26 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-            'address' => 'required|string',
-            'country_id' => 'required|int',
-            'city_id' => 'required|int',
-            'gender' => 'required|in:male,female',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'password' => 'required|min:6'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors(), 'status' => 'errors']);
         } else {
 
-            $insert = User::create([
+            $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'address' => $request->address,
-                'country_id' => $request->country_id,
-                'city_id' => $request->city_id,
-                'gender' => $request->gender
+                'password' => bcrypt($request->password)
             ]);
 
-            // image upload
-            if ($request->hasFile('profile_picture')) {
-                $file = $request->file('profile_picture');
-                $filename = time() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('images'), $filename);
-                $insert->photo = $filename;
-            }
+            $token = JWTAuth::fromUser($user);
+            session()->put('token', $token);
 
-            $insert->save();
-
-            return response()->json(['success' => 'Registration successful. Please login.', 'status' => 'success']);
+            session()->flash('message', 'Registration successful.');
+            return response()->json(['token' => $token, 'message' => 'Registration successful. ', 'status' => 'success']);
         }
     }
-
-    public function update(Request $request) {}
 
 
 
@@ -76,22 +59,26 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return response()->json(['success' => 'Login successful.', 'status' => 'success']);
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['status' => 'error', 'message' => 'Invalid login credentials'], 401);
         }
 
-        return response()->json(['error' => 'The provided credentials do not match our records.', 'status' => 'error']);
+        $user = User::where('email', $request->email)->first();
+
+        $token = JWTAuth::fromUser($user);
+        session()->put('token', $token);
+
+        session()->flash('message', 'Login successful.');
+        return response()->json(['token' => $token, 'message' => 'Login successful.', 'status' => 'success']);
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        session()->forget('token');
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('showLoginForm');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Logout successful.'
+        ]);
     }
 }

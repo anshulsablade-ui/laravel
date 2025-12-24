@@ -6,7 +6,7 @@
 @endsection
 
 @section('content')
-    <div class="row justify-content-between">
+    <div class="justify-content-between">
         <h4 class="mb-4">Countries</h4>
 
         <div class="card-body">
@@ -46,14 +46,12 @@
                         contentType: false,
                         success: function(response) {
                             if (response.status == "success") {
-                                alert(response.success);
                                 window.location.href = "{{ route('showCountrieslist') }}";
                             }
-                            console.log(response.errors);
+                            
                             if (response.status === "errors") {
                                 let errors = response.errors;
                                 $.each(errors, function(key, value) {
-                                    console.log(key, value);
                                     $('.' + key + '_err').text(value[0]);
                                 });
                             }

@@ -6,7 +6,7 @@
 @endsection
 
 @section('content')
-    <div class="row justify-content-between">
+    <div class="justify-content-between">
         <h4 class="mb-4">Update Country</h4>
 
         <div class="card-body">
@@ -21,7 +21,7 @@
                     <input class="form-control" type="text" id="country" name="country_name" value="{{ $countries->country_name }}">
                     <span class="text-danger error-text country_name_err"></span>
                 </div>
-                <button class="btn btn-primary mt-3" type="submit">Up[date]</button>
+                <button class="btn btn-primary mt-3" type="submit">Update</button>
             </form>
         </div>
     @endsection
@@ -29,11 +29,6 @@
     @section('script')
         <script>
             $(document).ready(function() {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
 
                 $('#country').submit(function(e) {
                     e.preventDefault();
@@ -48,7 +43,6 @@
                         contentType: false,
                         success: function(response) {
                             if (response.status == "success") {
-                                alert(response.success);
                                 window.location.href = "{{ route('showCountrieslist') }}";
                             }
                             console.log(response.errors);

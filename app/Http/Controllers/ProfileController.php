@@ -16,7 +16,7 @@ class ProfileController extends Controller
         // dd($request->all());
         if ($request->ajax()) {
 
-            $data = User::select('id', 'photo', 'name', 'email', 'gender')->limit(10)->get();
+            $data = User::select('id', 'photo', 'name', 'email', 'gender')->get();
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -38,6 +38,53 @@ class ProfileController extends Controller
         }
 
         return view('profile.index');
+    }
+
+    public function create()
+    {
+        $countries = Countries::select('country_id', 'country_name')->get();
+        return view('profile.create', compact('countries'));
+    }
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
+            'address' => 'required|string',
+            'country_id' => 'required|int',
+            'city_id' => 'required|int',
+            'gender' => 'required|in:male,female',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(), 'status' => 'errors']);
+        } else {
+            $insert = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'address' => $request->address,
+                'country_id' => $request->country_id,
+                'city_id' => $request->city_id,
+                'gender' => $request->gender
+            ]);
+
+            // image upload
+            if ($request->hasFile('profile_picture')) {
+                $file = $request->file('profile_picture');
+                $filename = time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images'), $filename);
+                $insert->photo = $filename;
+            }
+
+            $insert->save();
+
+            session()->flash('message', 'User created successfully.');
+
+            return response()->json(['message' => 'User created successfully.', 'status' => 'success']);
+        }
     }
 
     public function edit($id)
@@ -83,11 +130,13 @@ class ProfileController extends Controller
 
             $file = $request->file('profile_picture');
             $filename = time() . '.' . $file->getClientOriginalExtension();
+            
             $file->move(public_path('images'), $filename);
-            User::where('id', $request->id)->update(['photo' => $filename]);
+            $user->update(['photo' => $filename]);
         }
 
-        return response()->json(['success' => 'User update successful.', 'status' => 'success']);
+        session()->flash('message', 'User update successful.');
+        return response()->json(['message' => 'User update successful.', 'status' => 'success']);
     }
 
     public function delete($id)
@@ -99,12 +148,19 @@ class ProfileController extends Controller
 
         $user->delete();
 
-        return response()->json(['success' => 'User delete successful.', 'status' => 'success']);
+        return response()->json(['message' => 'User delete successful.', 'status' => 'success']);
     }
 
     public function show($id)
     {
         $user = User::with('country', 'city')->find($id);
         return view('profile.show', compact('user'));
+    }
+    public function loginuserprofileEdit()
+    {
+        $user = auth()->user();
+        $countries = Countries::select('country_id', 'country_name')->get();
+        $cities = Cities::select('city_id', 'city_name')->where('country_id', $user->country_id)->get();
+        return view('profile.userprofileupdate', compact('user', 'countries', 'cities'));
     }
 }

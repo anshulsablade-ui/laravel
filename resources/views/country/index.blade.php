@@ -2,21 +2,22 @@
 @section('title', 'Country')
 
 @section('style')
-    <link href="https://cdn.datatables.net/v/bs5/dt-2.3.5/datatables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.3.5/r-3.0.7/datatables.min.css" rel="stylesheet">
 @endsection
 
 @section('content')
-    <div class="row justify-content-between">
-        <div class="col-4">
-            <h4 class="mb-4">Countries</h4>
+    <div class="d-flex justify-content-between px-3">
+        <div>
+            <h4>Countries</h4>
         </div>
-        <div class="col-2">
+        <div>
             <a href="{{ route('showCountryForm') }}" class="btn btn-primary">Add Country</a>
+            <a href="{{ route('showBulkCountryForm') }}" class="btn btn-primary">Bulk Add Country</a>
         </div>
     </div>
 
-    <div class="card-body">
-        <table class="table data-table">
+    <div class="card-body table-responsive">
+        <table class="table table-striped data-table w-100">
             <thead>
                 <tr>
                     <th>No</th>
@@ -31,13 +32,14 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.datatables.net/v/bs5/dt-2.3.5/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bs5/dt-2.3.5/r-3.0.7/datatables.min.js"></script>
     <script>
         $(function() {
 
             var table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
+                responsive: true,
                 ajax: "{{ route('showCountrieslist') }}",
                 columns: [{
                         data: 'country_id',
@@ -65,20 +67,32 @@
             $('body').on('click', '.delete', function() {
 
                 var country_id = $(this).attr("data-id");
-                confirm("Are You sure want to delete?");
-                if (!confirm) {
-                    return false;
-                }
 
-                $.ajax({
-                    type: "delete",
-                    url: '/countries/delete/' + country_id,
-                    data: country_id,
-                    success: function(response) {
-                        alert(response.success);
-                        window.location.href = "{{ route('showCountrieslist') }}";
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "delete",
+                            url: '/countries/delete/' + country_id,
+
+                            success: function(response) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    response.success,
+                                    'success'
+                                )
+                                table.ajax.reload();
+                            }
+                        });
                     }
-                });
+                })
             });
 
         });

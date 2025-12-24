@@ -7,9 +7,9 @@
 @endsection
 
 @section('content')
-    <div class="row justify-content-between">
-        <h4 class="mb-4 col-md-12">Profile view</h4>
-        <div class="card-body col-md-12">
+    <div class="justify-content-between">
+        <h4 class="mb-4">Profile view</h4>
+        <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-4">
                     @if ($user->photo == null)
@@ -32,29 +32,37 @@
                             <p class="text-muted mb-0">{{ $user->email }}</p>
                         </div>
 
-                        <div class="col-md-6">
-                            <strong>Address</strong>
-                            <p class="text-muted mb-0">{{ $user->address }}</p>
-                        </div>
+                        @if( $user->address )
+                            <div class="col-md-6">
+                                <strong>Address</strong>
+                                <p class="text-muted mb-0">{{ $user->address }}</p>
+                            </div>
+                        @endif
 
-                        <div class="col-md-6">
-                            <strong>Country</strong>
-                            <p class="text-muted mb-0">{{ $user->country->country_name }}</p>
-                        </div>
+                        @if ( $user->country )
+                            <div class="col-md-6">
+                                <strong>Country</strong>
+                                <p class="text-muted mb-0">{{ $user->country->country_name }}</p>
+                            </div>
+                        @endif
 
-                        <div class="col-md-6">
-                            <strong>City</strong>
-                            <p class="text-muted mb-0">{{ $user->city->city_name }}</p>
-                        </div>
+                        @if( $user->state )
+                            <div class="col-md-6">
+                                <strong>City</strong>
+                                <p class="text-muted mb-0">{{ $user->city->city_name }}</p>
+                            </div>
+                        @endif
 
-                        <div class="col-md-6">
-                            <strong>Gender</strong>
-                            <p class="text-muted mb-0 text-capitalize">{{ $user->gender }}</p>
-                        </div>
+                        @if( $user->gender )
+                            <div class="col-md-6">
+                                <strong>Gender</strong>
+                                <p class="text-muted mb-0 text-capitalize">{{ $user->gender }}</p>
+                            </div>
+                        @endif
                     </div>
 
-                    <div class="text-center mt-4">
-                        <a href="{{ route('edit.user', $user->id) }}" class="btn btn-primary px-4">
+                    <div class="mt-4">
+                        <a href="{{ route('loginuserprofileEdit', $user->id) }}" class="btn btn-primary px-4">
                             Edit Profile
                         </a>
                     </div>

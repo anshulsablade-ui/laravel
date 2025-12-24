@@ -1,13 +1,22 @@
 @extends('app')
 
 @section('style')
-    <link href="https://cdn.datatables.net/v/bs5/dt-2.3.5/datatables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/v/bs5/dt-2.3.5/r-3.0.7/datatables.min.css" rel="stylesheet">
+
 @endsection
 
 @section('content')
-    <h4 class="mb-4">Users</h4>
-    <div class="card-body">
-        <table class="table data-table">
+    <div class="d-flex justify-content-between px-3">
+        <div>
+            <h4>Users</h4>
+        </div>
+        <div>
+            <a href="{{ route('create.user') }}" class="btn btn-primary">Add User</a>
+        </div>
+    </div>
+
+    <div class="card-body table-responsive">
+        <table class="table table-striped data-table w-100">
             <thead>
                 <tr>
                     <th>No</th>
@@ -18,20 +27,21 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
+
 @endsection
 
 @section('script')
-    <script src="https://cdn.datatables.net/v/bs5/dt-2.3.5/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/dt-2.3.5/r-3.0.7/datatables.min.js"></script>
     <script>
         $(function() {
 
             var table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
+                responsive: true,
                 ajax: "{{ route('showUsers') }}",
                 columns: [
                     {data: 'id', name: 'id'},
@@ -48,26 +58,41 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            
+            
             $('body').on('click', '.delete', function() {
 
                 var user_id = $(this).attr("data-id");
-                confirm("Are You sure want to delete?");
-                if (!confirm) {
-                    return false;
-                }
 
-                $.ajax({
-                    type: "delete",
-                    url: '/users/delete/' + user_id,
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "delete",
+                            url: '/users/delete/' + user_id,
 
-                    success: function(response) {
-                        alert(response.success);
-                        window.location.href = "{{ route('showUsers') }}";
+                            success: function(response) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    response.success,
+                                    'success'
+                                )
+                                table.ajax.reload();
+                            }
+                        });
                     }
-                });
+                })
             });
-
+            
         });
+
+
     </script>
 @endsection

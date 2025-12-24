@@ -18,22 +18,19 @@ class CityController extends Controller
                 ->with(['country' => function ($query) {
                     $query->select('country_id', 'country_name');
                 }])
-                ->limit(10)->get();
+                ->get();
 
             // dd($cities->toArray());
             return DataTables::of($cities)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
 
-                    $btn = '<a href="' . route('edit.city', $row->city_id) . '" class="edit btn btn-primary btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-id="' . $row->city_id . '">Delete</a>';
+                    $btn = '<a href="' . route('edit.city', $row->city_id) . '" class="edit btn btn-primary btn-sm">Edit</a> 
+                    <a href="javascript:void(0)" class="delete btn btn-danger btn-sm" data-id="' . $row->city_id . '">Delete</a>';
 
                     return $btn;
                 })
-                ->addColumn('country_name', function ($row) {
-
-                    return $row->country->country_name;
-                })
-                ->rawColumns(['action', 'country_name'])
+                ->rawColumns(['action'])
                 ->make(true);
         }
         return view('city.index');
@@ -54,11 +51,12 @@ class CityController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors(), 'status' => 'errors']);
         }
-        $insert = Cities::create([
+        Cities::create([
             'city_name' => $request->city_name,
             'country_id' => $request->country_id
         ]);
-        return response()->json(['success' => 'Country name add successful.', 'status' => 'success']);
+        session()->flash('message', 'City name add successful.');
+        return response()->json(['message' => 'Country name add successful.', 'status' => 'success']);
     }
 
     public function edit($id)
@@ -78,11 +76,12 @@ class CityController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors(), 'status' => 'errors']);
         }
-        $insert = Cities::where('city_id', $request->city_id)->update([
+        Cities::where('city_id', $request->city_id)->update([
             'city_name' => $request->city_name,
             'country_id' => $request->country_id
         ]);
-        return response()->json(['success' => 'City name update successful.', 'status' => 'success']);
+        session()->flash('message', 'City name update successful.');
+        return response()->json(['message' => 'City name update successful.', 'status' => 'success']);
     }
 
     public function delete($id)
@@ -91,7 +90,7 @@ class CityController extends Controller
         $cities = Cities::where('city_id', $id)->first();
         if ($cities) {
             Cities::where('city_id', $id)->delete();
-            return response()->json(['success' => 'City name delete successful.', 'status' => 'success']);
+            return response()->json(['message' => 'City name delete successful.', 'status' => 'success']);
         }
         if ($cities = null) {
             return response()->json(['errors' => 'City not found.', 'status' => 'errors']);
