@@ -43,10 +43,11 @@
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-      
-                  <img src="{{ asset('images/' . (auth()->user()->photo ? auth()->user()->photo : 'default.jpg')) }}"
-                       class="user-image rounded-circle shadow"
-                       alt="User Image"/>
+                @if (file_exists(public_path('images/' . auth()->user()->photo)))
+                <img src="{{ asset('images/' . (auth()->user()->photo ? auth()->user()->photo : 'default.jpg')) }}"
+                     class="user-image rounded-circle shadow"
+                     alt="User Image"/>
+                @endif
 
                 <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
               </a>

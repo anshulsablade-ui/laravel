@@ -214,9 +214,9 @@
                             let errors = response.errors;
                             
                             $.each(errors, function (key, value) {
-                                let parts = key.split('.');     // name.0
-                                let field = parts[0];           // name
-                                let index = parts[1];           // 0
+                                let parts = key.split('.');
+                                let field = parts[0];      
+                                let index = parts[1];      
                             
                                 $(`.bulk-row[data-row="${index}"] .${field}_err`).text(value[0]);
                             });

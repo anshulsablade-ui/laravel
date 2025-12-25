@@ -165,6 +165,14 @@
                 if (['profile_picture'].includes(name)) {
                     return true;
                 }
+
+                // email validation
+                if (name === 'email') {
+                    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+                        $('.' + name + '_err').text('Please enter a valid email address');
+                        valid = false;
+                    }
+                }
                 
                 // file validation
                 if (type === 'file') {

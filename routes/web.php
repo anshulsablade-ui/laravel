@@ -23,7 +23,7 @@ Route::get('/getCities', [CityController::class, 'getCities'])->name('getCities'
 
 
 // route group middleware
-Route::middleware(['auth:sanctum', 'login'])->group(function () {
+Route::middleware( 'login')->group(function () {
     Route::get('/users', [ProfileController::class, 'index'])->name('showUsers');
     Route::get('/users/create', [ProfileController::class, 'create'])->name('create.user');
     Route::post('/users/store', [ProfileController::class, 'store'])->name('store.user');

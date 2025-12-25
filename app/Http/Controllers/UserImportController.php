@@ -30,22 +30,31 @@ class UserImportController extends Controller
         $file = fopen($request->file('csv_file'), 'r');
         fgetcsv($file);
 
+        $data = [];
+        $totalRecords = 0;
         while (($row = fgetcsv($file)) !== false) {
             if (User::where('email', $row[1])->exists()) {
+                $totalRecords++;
                 continue;
             }
-            User::create([
+            $data[] = [
                 'name' => $row[0],
                 'email' => $row[1],
                 'password' => Hash::make($row[2]),
                 'address' => $row[3],
                 'gender' => $row[4]
-            ]);
+            ];
+            $totalRecords++;
         }
 
         fclose($file);
 
-        session()->flash('success', 'CSV Data Imported Successfully!');
+        if (empty($data)) {
+            return response()->json(['status' => 'errors', 'errors' => ['csv_file' => ['No new records to import. All emails already exist.']]]);
+        }
+        User::insert($data);
+
+        session()->flash('message', '' . $totalRecords . ' to ' . count($data) . ' records imported successfully.');
         return response()->json(['status' => 'success', 'message' => 'CSV Data Imported Successfully!']);
     }
 }

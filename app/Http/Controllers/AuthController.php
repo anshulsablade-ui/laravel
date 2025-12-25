@@ -40,7 +40,7 @@ class AuthController extends Controller
             session()->put('token', $token);
 
             session()->flash('message', 'Registration successful.');
-            return response()->json(['token' => $token, 'message' => 'Registration successful. ', 'status' => 'success']);
+            return response()->json(['token' => $token, 'message' => 'Registration successful. ', 'status' => 'success', 'expires_in' => config('jwt.ttl'), 'user' => $user]);
         }
     }
 
@@ -60,7 +60,7 @@ class AuthController extends Controller
         ]);
 
         if (!Auth::attempt($credentials)) {
-            return response()->json(['status' => 'errors', 'message' => 'Invalid login credentials'], 401);
+            return response()->json(['status' => 'errors', 'errors' => ['email' => ['Invalid credentials.']]]);
         }
 
         $user = User::where('email', $request->email)->first();
@@ -69,16 +69,32 @@ class AuthController extends Controller
         session()->put('token', $token);
 
         session()->flash('message', 'Login successful.');
-        return response()->json(['token' => $token, 'message' => 'Login successful.', 'status' => 'success']);
+        return response()->json(['token' => $token, 'message' => 'Login successful.', 'status' => 'success', 'expires_in' => config('jwt.ttl') , 'user' => $user]);
     }
 
     public function logout(Request $request)
     {
         session()->forget('token');
 
+        Auth::guard('api')->logout();
+
         return response()->json([
             'status' => 'success',
             'message' => 'Logout successful.'
         ]);
+    }
+
+    public function me()
+    {
+        return response()->json(Auth::guard('api')->user());
+    }
+
+    public function refresh()
+    {
+        return response()->json([
+                'token' => Auth::guard('api')->refresh(),
+                'status' => 'success', 
+                'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
+            ]);
     }
 }

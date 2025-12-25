@@ -95,6 +95,8 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="{{ asset('js/adminlte.js') }}"></script>
+    <script src="{{ asset('js/ajax.js') }}"></script>
     <script>
         $(document).ready(function() {
             $.ajaxSetup({
@@ -103,52 +105,21 @@
                 }
             });
 
-            // $('#country').on('change', function() {
-            //     var country_id = $(this).val();
-            //     if (country_id) {
-            //         $.ajax({
-            //             url: "{{ route('getCities') }}",
-            //             type: "GET",
-            //             data: {
-            //                 country_id: country_id
-            //             },
-            //             success: function(response) {
-
-            //                 var data = '<option value="">Select City</option>';
-            //                 $.each(response, function(index, city) {
-            //                     data +=
-            //                         `<option value="${city.city_id}">${city.city_name}</option>`;
-            //                 });
-            //                 $('#city').html(data);
-            //             }
-            //         });
-            //     } else {
-            //         $('#city').html('<option value="">Select Country first</option>');
-            //     }
-            // });
-
             $("#register").submit(function(e) {
                 e.preventDefault();
-                var formData = new FormData(this);
-                $.ajax({
-                    type: "post",
-                    url: "{{ route('register') }}",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        if (response.status == "success") {
-                            window.location.href = "{{ route('showLoginForm') }}";
-                        }
 
-                        if (response.status === "errors") {
-                            let errors = response.errors;
-                            $.each(errors, function(key, value) {
-                                $('.' + key + '_err').text(value[0]);
-                            });
-                        }
+                ajaxCall('{{ route('register') }}', 'POST', new FormData(this), function(response) {
+                    if (response.status == "success") {
+                        window.location.href = "{{ route('showLoginForm') }}";
                     }
-                });
+
+                    if (response.status === "errors") {
+                        let errors = response.errors;
+                        $.each(errors, function(key, value) {
+                            $('.' + key + '_err').text(value[0]);
+                        });
+                    }
+                })
             });
         });
     </script>

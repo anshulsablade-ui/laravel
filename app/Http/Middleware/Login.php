@@ -12,7 +12,6 @@ class Login
 {
     public function handle(Request $request, Closure $next): Response
     {
-        // dd(session('token'));
         if (session()->has('token') == null) {
             return redirect()->route('login');
         }
