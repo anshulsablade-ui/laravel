@@ -1,5 +1,4 @@
 function ajaxCall(url, method, data, successCallback, errorCallback) {
-    // console.log('AJAX Call:', { url: url, method: method, data: data });
     $.ajax({
         url: url,
         type: method,

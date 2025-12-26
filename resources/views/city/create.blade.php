@@ -40,33 +40,23 @@
                     }
                 });
 
-                $('.error-text').text('');
-
+                
                 $('#city').submit(function(e) {
                     e.preventDefault();
+                    
+                    $('.error-text').text('');
 
-                    var formData = new FormData(this);
-
-                    $.ajax({
-                        type: "post",
-                        url: "{{ route('store.city') }}",
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
-                            if (response.status == "success") {
-                                window.location.href = "{{ route('showCitieslist') }}";
-                            }
-                            console.log(response.errors);
-                            if (response.status === "errors") {
-                                let errors = response.errors;
-                                $.each(errors, function(key, value) {
-                                    console.log(key, value);
-                                    $('.' + key + '_err').text(value[0]);
-                                });
-                            }
+                    ajaxCall('{{ route('store.city') }}', 'POST', new FormData(this), function(response) {
+                        if (response.status === 'success') {
+                            window.location.href = "{{ route('showCitieslist') }}";
                         }
-                    });
+                        if (response.status === 'errors') {
+                            let errors = response.errors;
+                            $.each(errors, function(key, value) {
+                                $('.' + key + '_err').text(value[0]);
+                            });
+                        }
+                    })
                 });
             });
         </script>

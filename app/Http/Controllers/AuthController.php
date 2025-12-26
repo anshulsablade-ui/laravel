@@ -29,7 +29,6 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors(), 'status' => 'errors']);
         } else {
-
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -55,12 +54,12 @@ class AuthController extends Controller
     public function LoginForm(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|exists:users,email',
-            'password' => 'required',
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string',
         ]);
 
         if (!Auth::attempt($credentials)) {
-            return response()->json(['status' => 'errors', 'errors' => ['email' => ['Invalid credentials.']]]);
+            return response()->json(['status' => 'errors', 'message' => 'Invalid credentials.']);
         }
 
         $user = User::where('email', $request->email)->first();
@@ -91,10 +90,11 @@ class AuthController extends Controller
 
     public function refresh()
     {
+        $token = JWTAuth::refresh(JWTAuth::getToken());
         return response()->json([
-                'token' => Auth::guard('api')->refresh(),
+                'token' => $token,
                 'status' => 'success', 
-                'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
+                'expires_in' => config('jwt.ttl')
             ]);
     }
 }

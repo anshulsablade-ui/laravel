@@ -33,28 +33,20 @@
                 $('#country').submit(function(e) {
                     e.preventDefault();
 
-                    var formData = new FormData(this);
-
-                    $.ajax({
-                        type: "post",
-                        url: "{{ route('update.country') }}",
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
-                            if (response.status == "success") {
-                                window.location.href = "{{ route('showCountrieslist') }}";
-                            }
-                            console.log(response.errors);
-                            if (response.status === "errors") {
-                                let errors = response.errors;
-                                $.each(errors, function(key, value) {
-                                    console.log(key, value);
-                                    $('.' + key + '_err').text(value[0]);
-                                });
-                            }
+                    $('.error-text').text('');
+                    
+                    ajaxCall('{{ route('update.country') }}', 'POST', new FormData(this), function(response) {
+                        if (response.status === 'success') {
+                            window.location.href = "{{ route('showCountrieslist') }}";
                         }
-                    });
+                        if (response.status === 'errors') {
+                            let errors = response.errors;
+                            $.each(errors, function(key, value) {
+                                $('.' + key + '_err').text(value[0]);
+                            });
+                        }
+                    })
+
                 });
             });
         </script>

@@ -8,9 +8,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserImportController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('app');
-// });
+Route::get('/', function () {
+    return redirect()->route('showLoginForm');
+    // return view('app');
+});
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('showLoginForm');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('showRegisterForm');
@@ -63,12 +64,14 @@ Route::middleware( 'login')->group(function () {
             return view('multistep_form_submit.index', compact('countries'));
         }
     )->name('multistep.form');
+
+    
+    // Multiple insert form data ---------------------------------------------------------------------
+    Route::get('/multipleinsert', [BulkController::class, 'index'])->name('multipleinsert');
+    Route::post('/bulk.store', [BulkController::class, 'store'])->name('bulk.store');
 });
 
 
 
 
-// Multiple insert form data ---------------------------------------------------------------------
-Route::get('/multipleinsert', [BulkController::class, 'index'])->name('multipleinsert');
-Route::post('/bulk.store', [BulkController::class, 'store'])->name('bulk.store');
 

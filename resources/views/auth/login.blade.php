@@ -47,12 +47,6 @@
 
           <!--begin::Row-->
           <div class="row">
-            <div class="col-8 d-inline-flex align-items-center">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                <label class="form-check-label" for="flexCheckDefault"> Remember Me </label>
-              </div>
-            </div>
 
             <!-- /.col -->
             <div class="col-4">
@@ -83,12 +77,13 @@
     $("#loginForm").submit(function (e) {
       e.preventDefault();
 
-      var formData = new FormData(this);
+      $('.error-text').text('');
 
-      ajaxCall('{{ route('login') }}', 'POST', formData, function (response) {
+      ajaxCall('{{ route('login') }}', 'POST', new FormData(this), function (response) {
         if (response.status == "success") {
           window.location.href = "{{ route('showUsers') }}";
         }
+        console.log(response.message);
         if (response.status === "errors") {
           $('.email_err').text(response.message);
         }

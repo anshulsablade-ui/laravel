@@ -81,31 +81,22 @@
                 $('#bulkForm').submit(function (e) {
                     e.preventDefault();
 
-                    $('.error-text').text(''); // clear old errors
+                    $('.error-text').text('');
 
-                    $.ajax({
-                        type: "post",
-                        url: "{{ route('bulkStore.countries') }}",
-                        data: $(this).serialize(),
-
-                        success: function (response) {
-
-                            if (response.status === "success") {
-                                window.location.href = "{{ route('showCountrieslist') }}";
-                            }
-
-                            if (response.status === "errors") {
-
-                                $.each(response.errors, function (key, value) {
-
-                                    let index = key.split('.')[1];
-
-                                    $(`span[data-index="${index}"]`).text(value[0]);
-                                });
-                            }
-
+                    ajaxCall('{{ route('bulkStore.countries') }}', 'POST', new FormData(this), function (response) {
+                        if (response.status === "success") {
+                            window.location.href = "{{ route('showCountrieslist') }}";
                         }
-                    });
+
+                        if (response.status === "errors") {
+
+                            $.each(response.errors, function (key, value) {
+                                let index = key.split('.')[1];
+                                $(`span[data-index="${index}"]`).text(value[0]);
+                            });
+                        }
+                    })
+
                 });
 
             });

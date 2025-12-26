@@ -84,9 +84,9 @@
                 </div>
                 <div class="col-md-12 text-end">
 
-                    <button class="btn btn-primary d-none" type="button" id="prevBtn">Previous</button>
-                    <button class="btn btn-primary" type="button" id="nextBtn">Next</button>
-                    <button class="btn btn-primary d-none" type="submit">Submit</button>
+                    <button class="btn btn-primary px-5 d-none" type="button" id="prevBtn">Previous</button>
+                    <button class="btn btn-primary px-5" type="button" id="nextBtn">Next</button>
+                    <button class="btn btn-primary px-5 d-none" type="submit">Submit</button>
                 </div>
             </form>
         </div>
@@ -154,7 +154,7 @@
 
             // clear old errors
             currentTab.find('.error-text').text('');
-            
+
             currentTab.find('input, select').each(function () {
                 // console.log(this);
                 let name = $(this).attr('name');
@@ -173,7 +173,7 @@
                         valid = false;
                     }
                 }
-                
+
                 // file validation
                 if (type === 'file') {
                     console.log("file");
@@ -184,7 +184,6 @@
                 }
                 else {
                     if (!value) {
-
                         $('.' + name + '_err').text(label + ' is required');
                         valid = false;
                     }
@@ -228,46 +227,38 @@
                     return false;
                 }
 
-                let formData = new FormData(this);
                 $('.error-text').text('');
 
-                $.ajax({
-                    url: "{{ route('store.user') }}",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
+                ajaxCall('{{ route('store.user') }}', 'POST', new FormData(this), function (response) {
+                    if (response.status === 'success') {
+                        window.location.href = "{{ route('showUsers') }}";
+                    }
+                    if (response.status === 'errors') {
+                        let errors = response.errors;
+                        $.each(errors, function (key, value) {
+                            $('.' + key + '_err').text(value[0]);
+                        });
 
-                    success: function (response) {
-                        if (response.status === 'success') {
-                            window.location.href = "{{ route('showUsers') }}";
-                        }
-                        if (response.status === 'errors') {
-                            let errors = response.errors;
-                            $.each(errors, function (key, value) {
-                                $('.' + key + '_err').text(value[0]);
-                            });
+                        var errorsTabsfind = $(':input[name="' + Object.keys(errors)[0] + '"]').closest('.tab');
+                        $('.tab').addClass('d-none');
+                        errorsTabsfind.removeClass('d-none');
 
-                            var errorsTabsfind = $(':input[name="' + Object.keys(errors)[0] + '"]').closest('.tab');
-                            $('.tab').addClass('d-none');
-                            errorsTabsfind.removeClass('d-none');
-                            
-                            if (errorsTabsfind.is($('.tab').first())) {
-                                $('#prevBtn').addClass('d-none');
-                                $('#nextBtn').removeClass('d-none');
-                                $('button[type="submit"]').addClass('d-none');
-                            } else if (errorsTabsfind.is($('.tab').last())) {
-                                $('#nextBtn').addClass('d-none');
-                                $('button[type="submit"]').removeClass('d-none');
-                                $('#prevBtn').removeClass('d-none');
-                            } else {
-                                $('#prevBtn').removeClass('d-none');
-                                $('#nextBtn').removeClass('d-none');
-                                $('button[type="submit"]').addClass('d-none');
-                            }
+                        if (errorsTabsfind.is($('.tab').first())) {
+                            $('#prevBtn').addClass('d-none');
+                            $('#nextBtn').removeClass('d-none');
+                            $('button[type="submit"]').addClass('d-none');
+                        } else if (errorsTabsfind.is($('.tab').last())) {
+                            $('#nextBtn').addClass('d-none');
+                            $('button[type="submit"]').removeClass('d-none');
+                            $('#prevBtn').removeClass('d-none');
+                        } else {
+                            $('#prevBtn').removeClass('d-none');
+                            $('#nextBtn').removeClass('d-none');
+                            $('button[type="submit"]').addClass('d-none');
                         }
                     }
-                });
+                })
+
             });
 
         });

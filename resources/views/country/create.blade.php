@@ -31,32 +31,24 @@
                     }
                 });
 
-                $('.error-text').text('');
-
+                
                 $('#country').submit(function(e) {
                     e.preventDefault();
 
-                    var formData = new FormData(this);
+                    $('.error-text').text('');
 
-                    $.ajax({
-                        type: "post",
-                        url: "{{ route('store.country') }}",
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
-                            if (response.status == "success") {
-                                window.location.href = "{{ route('showCountrieslist') }}";
-                            }
-                            
-                            if (response.status === "errors") {
-                                let errors = response.errors;
-                                $.each(errors, function(key, value) {
-                                    $('.' + key + '_err').text(value[0]);
-                                });
-                            }
+                    ajaxCall('{{ route('store.country') }}', 'POST', new FormData(this), function(response) {
+                        if (response.status === 'success') {
+                            window.location.href = "{{ route('showCountrieslist') }}";
                         }
-                    });
+                        if (response.status === 'errors') {
+                            let errors = response.errors;
+                            $.each(errors, function(key, value) {
+                                $('.' + key + '_err').text(value[0]);
+                            });
+                        }
+                    })
+
                 });
             });
         </script>

@@ -43,10 +43,13 @@
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown user-menu">
               <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                @if (file_exists(public_path('images/' . auth()->user()->photo)))
-                <img src="{{ asset('images/' . (auth()->user()->photo ? auth()->user()->photo : 'default.jpg')) }}"
+
+                @if (auth()->user() && file_exists(public_path('images/' . auth()->user()->photo)))
+                  <img src="{{ asset('images/' . (auth()->user()->photo )) }}"
                      class="user-image rounded-circle shadow"
-                     alt="User Image"/>
+                     alt="User Image"/>                    
+                @else
+                  <img src="{{ asset('images/default.jpg') }}" class="user-image rounded-circle shadow" alt="User Image"/>
                 @endif
 
                 <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
@@ -55,9 +58,13 @@
                 
                 <li class="user-header text-bg-primary">
 
-                    <img src="{{ asset('images/' . (auth()->user()->photo ? auth()->user()->photo : 'default.jpg')) }}"
-                         class="user-image rounded-circle shadow"
-                         alt="User Image"/>
+                @if (file_exists(public_path('images/' . auth()->user()->photo)) && auth()->user()->photo)
+                  <img src="{{ asset('images/' . (auth()->user()->photo )) }}"
+                     class="user-image rounded-circle shadow"
+                     alt="User Image"/>                    
+                @else
+                  <img src="{{ asset('images/default.jpg') }}" class="user-image rounded-circle shadow" alt="User Image"/>                    
+                @endif
 
                   <p>{{ auth()->user()->name }}</p>
                 </li>

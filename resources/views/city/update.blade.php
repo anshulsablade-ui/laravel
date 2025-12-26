@@ -50,36 +50,23 @@
                 }
             });
 
+            
             $('#city').on('submit', function(e) {
                 e.preventDefault();
-
-                let formData = new FormData(this);
+                
                 $('.error-text').text('');
 
-                $.ajax({
-                    url: "{{ route('update.city') }}",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            window.location.href = "{{ route('showCitieslist') }}";
-                        }
-
-                        if (response.status === 'errors') {
-                            $.each(response.errors, function(key, value) {
-                                $('.' + key + '_err').text(value[0]);
-                            });
-                        }
-                    },
-
-                    error: function(xhr) {
-                        alert('Something went wrong. Please try again.');
-                        console.log(xhr.responseText);
+                ajaxCall('{{ route('update.city') }}', 'POST', new FormData(this), function(response) {
+                    if (response.status === 'success') {
+                        window.location.href = "{{ route('showCitieslist') }}";
                     }
-                });
+                    if (response.status === 'errors') {
+                        let errors = response.errors;
+                        $.each(errors, function(key, value) {
+                            $('.' + key + '_err').text(value[0]);
+                        });
+                    }
+                })
             });
 
         });
