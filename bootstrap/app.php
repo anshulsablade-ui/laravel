@@ -26,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->is('api/*')) {
                 return response()->json([
                     'message' => 'Unauthorized action.',
-                    'error_code' => 'INVALID_TOKEN'
+                    'error_code' => '401',
                 ], 401);
             }
         });

@@ -15,6 +15,15 @@ class ProductController extends Controller
         return response()->json(['data' => $products, 'status' => 'success']);
     }
 
+    public function show($id)
+    {
+        $product = Product::find($id);
+        if (!$product) {
+            return response()->json(['errors' => 'Product not found.', 'status' => 'errors']);
+        }
+        return response()->json(['data' => $product]);
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -59,6 +68,10 @@ class ProductController extends Controller
             return response()->json(['errors' => $validator->errors(), 'status' => 'errors']);
         }
 
+        $product = Product::find($id);
+        if (!$product) {
+            return response()->json(['errors' => 'Product not found.', 'status' => 'errors']);
+        }
         Product::where('id', $id)->update([
             'name' => $request->name,
             'description' => $request->description,

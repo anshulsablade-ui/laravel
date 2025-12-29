@@ -36,7 +36,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:255',
             'password' => 'required|string',
@@ -48,10 +47,11 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             return response()->json(['status' => 'errors', 'errors' => ['email' => ['Invalid credentials.']]]);
         }
 
+        $user->tokens()->delete();
         $token = $user->createToken('token')->plainTextToken;
 
         return response()->json(['token' => $token, 'message' => 'Login successful.', 'status' => 'success']);
@@ -71,11 +71,8 @@ class AuthController extends Controller
     public function refresh(Request $request)
     {
         $user = $request->user();
+        $request->user()->tokens()->delete();
 
-        // Delete current access token
-        $request->user()->currentAccessToken()->delete();
-
-        // Create new token
         $newToken = $user->createToken('api-token')->plainTextToken;
         return response()->json(['token' => $newToken, 'message' => 'Token refreshed.', 'status' => 'success']);
     }

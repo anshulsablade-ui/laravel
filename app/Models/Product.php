@@ -13,4 +13,9 @@ class Product extends Model
         'price',
         'image',
     ];
+    public function getImageAttribute($value)
+{
+    return $value ? asset('product/' . $value) : null;
+}
+
 }

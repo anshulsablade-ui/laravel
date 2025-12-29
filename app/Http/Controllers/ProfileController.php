@@ -152,9 +152,7 @@ class ProfileController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors(), 'status' => 'errors']);
         }
-        // if ($request->id == ) {
-        //     # code...
-        // }
+
         User::where('id', $request->id)->update([
             'name' => $request->name,
             'email' => $request->email,
